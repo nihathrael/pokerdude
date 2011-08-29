@@ -1,22 +1,17 @@
 package de.pokerdude;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class PokerGame {
 	
-	private ArrayList<Card> deck = new ArrayList<Card>();
-	
 	private ArrayList<Player> players = new ArrayList<Player>();
+	
+	private Deck deck = new Deck();
 	
 	private int smallblind;
 	private int bigblind;
 	
 	public PokerGame() {
-		generateNewDeck();
-		for(Card card: deck) {
-			System.out.println(card);
-		}
 		System.out.println("Game generated with " + deck.size() + " cards!");
 	}
 	
@@ -27,19 +22,6 @@ public class PokerGame {
 		return false;
 	}
 	
-	public void generateNewDeck() {
-		addSuiteCards(Suite.CLUBS);
-		addSuiteCards(Suite.DIAMONDS);
-		addSuiteCards(Suite.HEARTS);
-		addSuiteCards(Suite.SPADES);
-		Collections.shuffle(deck);
-	}
-	
-	public void addSuiteCards(Suite suite) {
-		for(int i=2; i<=14;i++) {
-			deck.add(new Card(suite, i));
-		}
-	}
 	
 	public int getSmallBlind() {
 		return smallblind;
@@ -54,8 +36,13 @@ public class PokerGame {
 	}
 
 	private void giveCards() {
+		System.out.println("Giving cards...");
 		for(Player player: players) {
 			ArrayList<Card> hand = new ArrayList<Card>();
+			hand.add(deck.getCard());
+			hand.add(deck.getCard());
+			player.setCards(hand);
 		}
+		System.out.println("Done!");
 	}
 }
