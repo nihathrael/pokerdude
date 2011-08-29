@@ -20,7 +20,7 @@ public class Card {
 	
 	@Override
 	public String toString() {
-		return "Card("+value+","+suite+")";
+		return "["+value+" of "+suite+"]";
 	}
 
 }

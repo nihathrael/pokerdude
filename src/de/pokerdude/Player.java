@@ -19,5 +19,20 @@ public class Player {
 	
 	public void setCards(ArrayList<Card> Cards) {
 		this.Cards = Cards;
+		System.out.println(name+": I just got two cards:");
+		System.out.println(Cards.get(0));
+		System.out.println(Cards.get(1));
+	}
+	
+	public int getBetPreFlop() {
+		return (int) (Math.random()*10);
+	}
+	
+	public int getBetPreTurn() {
+		return (int) (Math.random()*100);
+	}
+	
+	public int getBetPreRiver() {
+		return (int) (Math.random()*1000);
 	}
 }
