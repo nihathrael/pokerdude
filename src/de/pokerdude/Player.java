@@ -5,9 +5,12 @@ import java.util.ArrayList;
 
 
 public class Player {
+	
+	final String name;
 	ArrayList<Card> Cards;
 	
-	public Player() {
+	public Player(String name) {
+		this.name = name;
 	}
 	
 	public ArrayList<Card> getCards() {

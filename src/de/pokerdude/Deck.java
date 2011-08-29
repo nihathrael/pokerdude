@@ -13,6 +13,10 @@ public class Deck {
 		}
 	}
 	
+	public Deck(Deck copy) {
+		this.deck = copy.deck;
+	}
+	
 	public void generateNewDeck() {
 		addSuiteCards(Suite.CLUBS);
 		addSuiteCards(Suite.DIAMONDS);
@@ -34,4 +38,5 @@ public class Deck {
 	public int size() {
 		return deck.size();
 	}
+
 }
