@@ -43,18 +43,22 @@ public class PokerGame {
 	
 	public void startGame() {
 		giveCards();
+		showTable();
 		for(Player player: players) {
 			pot += player.getBetPreFlop();
 		}
 		fillFlop();
+		showTable();
 		for(Player player: players) {
 			pot += player.getBetPreTurn();
 		}
 		fillTurn();
+		showTable();
 		for(Player player: players) {
 			pot += player.getBetPreRiver();
 		}
 		fillRiver();
+		showTable();
 		System.out.println("Pot at: " + pot);
 	}
 
@@ -73,24 +77,24 @@ public class PokerGame {
 		flop.add(deck.getCard());
 		flop.add(deck.getCard());
 		flop.add(deck.getCard());
-		System.out.println("Filled flop:");
-		for(Card card: flop) {
-			System.out.println(card);
-		}
 	}
 	
 	private void fillRiver() {
 		river = deck.getCard();
-		System.out.println("River set: " + river);
 	}
 	
 	private void fillTurn() {
 		turn = deck.getCard();
-		System.out.println("Turn set: " + turn);
 	}
 	
 	public void showTable() {
 		System.out.println("Current table:");
-		
+		System.out.print("Flop: ");
+		for(Card card: flop) {
+			System.out.print(card);
+		}
+		System.out.println();
+		System.out.println("Turn:  " + turn);
+		System.out.println("River: " + river);
 	}
 }
