@@ -17,5 +17,10 @@ public class Card {
 	public Suite getSuite() {
 		return suite;
 	}
+	
+	@Override
+	public String toString() {
+		return "Card("+value+","+suite+")";
+	}
 
 }
