@@ -1,6 +1,6 @@
 package de.pokerdude;
 
-public class Card {
+public class Card implements Comparable<Card> {
 	
 	private final Suite suite;
 	private final int value;
@@ -21,6 +21,11 @@ public class Card {
 	@Override
 	public String toString() {
 		return "["+value+" of "+suite+"]";
+	}
+
+	@Override
+	public int compareTo(Card o) {
+		return ((Integer)value).compareTo(o.value);
 	}
 
 }
