@@ -53,11 +53,11 @@ public class RolloutSimulation {
 	private int doRollout(Player p, ArrayList<Card> CommonCards, int NumPlayers, Deck d) {
 		
 		ArrayList<Card> PlayerCards = d.getCards(NumPlayers*2-2);
-		int PlayerRating = PokerUtil.EvaluateCardSet(p.getCards(), CommonCards);
+		int PlayerRating = 0; //PokerUtil.EvaluateCardSet(p.getCards(), CommonCards);
 		boolean tie=false;
 		
 		for(int i=0;i<(NumPlayers-1);i++) {
-			int Rating = PokerUtil.EvaluateCardSet(PlayerCards.subList(i, i+2));
+			int Rating = 0; //PokerUtil.EvaluateCardSet(PlayerCards.subList(i, i+2));
 			if(PlayerRating == Rating) tie=true;;
 			if(PlayerRating < Rating) return -1;	
 		}

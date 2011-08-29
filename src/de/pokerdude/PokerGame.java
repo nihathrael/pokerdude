@@ -41,6 +41,22 @@ public class PokerGame {
 		return bigblind;
 	}
 	
+	public Card getTurn() {
+		return turn;
+	}
+	
+	public Card getRiver() {
+		return river;
+	}
+	
+	public Deck getDeck() {
+		return deck;
+	}
+	
+	public ArrayList<Card> getFlop() {
+		return flop;
+	}
+	
 	public void startGame() {
 		giveCards();
 		showTable();

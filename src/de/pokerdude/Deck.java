@@ -14,7 +14,10 @@ public class Deck {
 	}
 	
 	public Deck(Deck copy) {
-		this.deck = copy.deck;
+		this.deck = (ArrayList<Card>) copy.deck.clone();
+		Collections.shuffle(deck);
+		
+		
 	}
 	
 	public void generateNewDeck() {
@@ -33,6 +36,13 @@ public class Deck {
 	
 	public Card getCard() {
 		return deck.remove(deck.size()-1);
+	}
+	
+	public ArrayList<Card> getCards(int count) {
+		ArrayList<Card> result = (ArrayList<Card>) deck.subList(deck.size()-count, deck.size());
+		deck = (ArrayList<Card>) deck.subList(0, deck.size()-count);
+		return result;
+		
 	}
 	
 	public int size() {
