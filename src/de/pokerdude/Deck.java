@@ -5,6 +5,7 @@ import java.util.Collections;
 
 public class Deck {
 	private ArrayList<Card> deck = new ArrayList<Card>();
+	private ArrayList<Card> withoutTheseCards=null;
 	
 	public Deck() {
 		generateNewDeck();
@@ -16,8 +17,11 @@ public class Deck {
 	public Deck(Deck copy) {
 		this.deck = (ArrayList<Card>) copy.deck.clone();
 		Collections.shuffle(deck);
-		
-		
+	}
+	
+	public Deck(ArrayList<Card> withoutTheseCards) {
+		this.withoutTheseCards = withoutTheseCards;
+		generateNewDeck();
 	}
 	
 	public void generateNewDeck() {
@@ -30,6 +34,12 @@ public class Deck {
 	
 	public void addSuiteCards(Suite suite) {
 		for(int i=2; i<=14;i++) {
+			if(withoutTheseCards != null) {
+				for(Card card: withoutTheseCards) {
+					if((card.getSuite() == suite) && (card.getValue() == i))
+						continue;
+				}
+			}
 			deck.add(new Card(suite, i));
 		}
 	}
