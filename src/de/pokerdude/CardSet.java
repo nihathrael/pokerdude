@@ -28,8 +28,8 @@ public class CardSet {
 				spades.add(card);
 			}
 			int value = card.getValue();
-			if(mapping.containsKey(value)) {
-				mapping.put(value, mapping.get(value)+1);
+			if (mapping.containsKey(value)) {
+				mapping.put(value, mapping.get(value) + 1);
 			} else {
 				mapping.put(value, 1);
 			}
@@ -50,61 +50,93 @@ public class CardSet {
 		return res;
 	}
 
-	public boolean containsFlush() {
-		return getBiggestSet().size() > 5;
+	public Powerrating getFlushRating() {
+		if (getBiggestSet().size() > 5) {
+			TreeSet<Card> set = getBiggestSet();
+			Card last = set.last();
+			return new Powerrating(new int[] { 6, last.getValue() });
+		}
+		return null;
 	}
 
-	public boolean containsStraightFlush() {
-		if (!containsFlush())
-			return false;
-		return findRow(getBiggestSet());
+	public Powerrating getStraightFlushRating() {
+		TreeSet<Card> set = getBiggestSet();
+		if (set.size() > 5 && findRow(set)) {
+			Card last = set.last();
+			return new Powerrating(new int[] { 9, last.getValue() });
+		}
+		return null;
 	}
-	
+
+	public Powerrating getPairRating() {
+		int pairAt = -1;
+		for (Entry<Integer, Integer> entry : mapping.entrySet()) {
+			if (entry.getValue() >= 2) {
+				pairAt = entry.getKey();
+			}
+		}
+		if (pairAt == -1) {
+			return null;
+		}
+		mapping.remove(pairAt);
+		int[] rating = new int[] { 2, pairAt, 0, 0, 0 };
+		int b = 2;
+		for (int i = 14; i > 0; i--) {
+			if (mapping.containsKey(i)) {
+				rating[b++] = i;
+				mapping.remove(i);
+			}
+			if (b > 5)
+				break;
+		}
+		return new Powerrating(rating);
+	}
+
 	public boolean containsOnePair() {
 		return containsOfAKind(2);
 	}
-	
+
 	public boolean containsTwoPairs() {
 		int pairs = 0;
-		for(Entry<Integer, Integer> entry: mapping.entrySet()) {
-			if(entry.getValue() >= 2) {
+		for (Entry<Integer, Integer> entry : mapping.entrySet()) {
+			if (entry.getValue() >= 2) {
 				++pairs;
 			}
 		}
 		return pairs >= 2;
 	}
-	
+
 	public boolean containsFullHouse() {
 		boolean pair = false;
 		boolean triple = false;
-		for(Entry<Integer, Integer> entry: mapping.entrySet()) {
-			if(entry.getValue() == 2) {
+		for (Entry<Integer, Integer> entry : mapping.entrySet()) {
+			if (entry.getValue() == 2) {
 				pair = true;
 			}
-			if(entry.getValue() >= 3) {
+			if (entry.getValue() >= 3) {
 				triple = true;
 			}
 		}
 		return pair && triple;
 	}
-	
+
 	public boolean containsFourOfAKind() {
 		return containsOfAKind(4);
 	}
-	
+
 	public boolean containsThreeOfAKind() {
 		return containsOfAKind(4);
 	}
-	
+
 	public boolean containsOfAKind(int number) {
-		for(Entry<Integer, Integer> entry: mapping.entrySet()) {
-			if(entry.getValue() >= number) {
+		for (Entry<Integer, Integer> entry : mapping.entrySet()) {
+			if (entry.getValue() >= number) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
 	public boolean containsStraight() {
 		return findRow(cards);
 	}
@@ -126,7 +158,5 @@ public class CardSet {
 		}
 		return (row >= 5);
 	}
-	
-	
-	
+
 }
