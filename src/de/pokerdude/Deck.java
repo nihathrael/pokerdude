@@ -14,6 +14,7 @@ public class Deck {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public Deck(Deck copy) {
 		this.deck = (ArrayList<Card>) copy.deck.clone();
 		Collections.shuffle(deck);

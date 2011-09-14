@@ -1,6 +1,7 @@
 package de.pokerdude;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.TreeSet;
@@ -36,36 +37,30 @@ public class CardSet {
 		}
 	}
 
-	private TreeSet<Card> getBiggestSet() {
-		TreeSet<Card> res = clubs;
-		if (diamonds.size() > res.size()) {
-			res = diamonds;
+	public Powerrating evaluate() {
+		if(getStraightFlushRating() != null) {
+			return getStraightFlushRating();
+		} else if (containsFourOfAKind()) {
+			return getFourOfAKindRating();
+		} else if (containsFullHouse()) {
+			return getFullHouseRating();
+		} else if (getFlushRating() != null) {
+			return getFlushRating();
+		} else if (containsStraight()) {
+			return getStraightRating();
+		} else if (containsThreeOfAKind()) {
+			return getThreeOfAKindRating();
+		} else if (containsTwoPairs()) {
+			return getDoublePairRating();
+		} else if (containsOnePair()) {
+			return getPairRating();
+		} else {
+			return getHighestRating();
 		}
-		if (hearts.size() > res.size()) {
-			res = hearts;
-		}
-		if (spades.size() > res.size()) {
-			res = spades;
-		}
-		return res;
 	}
 
-	public Powerrating getFlushRating() {
-		if (getBiggestSet().size() > 5) {
-			TreeSet<Card> set = getBiggestSet();
-			Card last = set.last();
-			return new Powerrating(new int[] { 6, last.getValue() });
-		}
-		return null;
-	}
-
-	public Powerrating getStraightFlushRating() {
-		TreeSet<Card> set = getBiggestSet();
-		if (set.size() > 5 && findRow(set)) {
-			Card last = set.last();
-			return new Powerrating(new int[] { 9, last.getValue() });
-		}
-		return null;
+	public Powerrating getHighestRating() {
+		return new Powerrating(new int[] { 1, cards.last().getValue() });
 	}
 
 	public Powerrating getPairRating() {
@@ -90,6 +85,75 @@ public class CardSet {
 				break;
 		}
 		return new Powerrating(rating);
+	}
+
+	public Powerrating getDoublePairRating() {
+		int pairnum = 0;
+		int[] pairs = new int[2];
+		for (Entry<Integer, Integer> entry : mapping.entrySet()) {
+			if (entry.getValue() >= 2) {
+				pairs[pairnum++] = entry.getKey();
+			}
+		}
+		Arrays.sort(pairs);
+		mapping.remove(pairs[0]);
+		mapping.remove(pairs[1]);
+
+		int[] rating = new int[] { 3, pairs[1], pairs[0], 0, 0 };
+		int b = 3;
+		for (int i = 14; i > 0; i--) {
+			if (mapping.containsKey(i)) {
+				rating[b++] = i;
+				mapping.remove(i);
+			}
+			if (b > 5)
+				break;
+		}
+		return new Powerrating(rating);
+	}
+
+	public Powerrating getThreeOfAKindRating() {
+		return new Powerrating(new int[] { 4, getOfAKind(3) });
+	}
+
+	public Powerrating getStraightRating() {
+		return new Powerrating(new int[] { 5, cards.last().getValue() });
+	}
+
+	public Powerrating getFlushRating() {
+		if (getBiggestSet().size() > 5) {
+			TreeSet<Card> set = getBiggestSet();
+			Card last = set.last();
+			return new Powerrating(new int[] { 6, last.getValue() });
+		}
+		return null;
+	}
+
+	public Powerrating getFullHouseRating() {
+		int pair = -1;
+		int triple = -1;
+		for (Entry<Integer, Integer> entry : mapping.entrySet()) {
+			if (entry.getValue() == 2) {
+				pair = entry.getKey();
+			}
+			if (entry.getValue() >= 3) {
+				triple = entry.getKey();
+			}
+		}
+		return new Powerrating(new int[] { 7, triple, pair });
+	}
+
+	public Powerrating getFourOfAKindRating() {
+		return new Powerrating(new int[] { 8, getOfAKind(4) });
+	}
+
+	public Powerrating getStraightFlushRating() {
+		TreeSet<Card> set = getBiggestSet();
+		if (set.size() > 5 && findRow(set)) {
+			Card last = set.last();
+			return new Powerrating(new int[] { 9, last.getValue() });
+		}
+		return null;
 	}
 
 	public boolean containsOnePair() {
@@ -118,6 +182,16 @@ public class CardSet {
 			}
 		}
 		return pair && triple;
+	}
+
+	public int getOfAKind(int number) {
+		for (Entry<Integer, Integer> entry : mapping.entrySet()) {
+			if (entry.getValue() >= number) {
+				return entry.getKey();
+			}
+		}
+		return -1;
+
 	}
 
 	public boolean containsFourOfAKind() {
@@ -157,6 +231,20 @@ public class CardSet {
 			previous = cardArray[i];
 		}
 		return (row >= 5);
+	}
+
+	private TreeSet<Card> getBiggestSet() {
+		TreeSet<Card> res = clubs;
+		if (diamonds.size() > res.size()) {
+			res = diamonds;
+		}
+		if (hearts.size() > res.size()) {
+			res = hearts;
+		}
+		if (spades.size() > res.size()) {
+			res = spades;
+		}
+		return res;
 	}
 
 }
