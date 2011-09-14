@@ -1,9 +1,13 @@
 package de.pokerdude;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -11,7 +15,7 @@ import java.util.Scanner;
 
 public class RolloutSimulation {
 	
-	//List of propapilities filled by CalculatePreFlopPropabilities
+	//List of propabilities filled by CalculatePreFlopPropabilities
 	private ArrayList<PreFlopPropability> PFProps = null;
 	
 	public RolloutSimulation() {
@@ -44,8 +48,25 @@ public class RolloutSimulation {
 	}
 	
 	public void ReadTable(File f) throws IOException {
+	  try{
+		  FileInputStream fstream = new FileInputStream(f);
+		  DataInputStream in = new DataInputStream(fstream);
+		  BufferedReader br = new BufferedReader(new InputStreamReader(in));
+		  String strLine;
+
+		  PFProps = new ArrayList<PreFlopPropability>();
+		  
+		  while ((strLine = br.readLine()) != null)   {
+			  PreFlopPropability p = new PreFlopPropability(strLine);
+			  PFProps.add(p);
+			  System.out.println(p.toString());
+		  }
+		  //Close the input stream
+		  in.close();
+		    }catch (Exception e){//Catch exception if any
+		     e.printStackTrace();
+		  }
 		
-			
 	}
 	
 	public void SaveTable(File f) {
@@ -58,7 +79,8 @@ public class RolloutSimulation {
 			BufferedWriter out = new BufferedWriter(fstream);
 			
 			for(int i=0;i<PFProps.size();i++) {
-				out.write(PFProps.get(i).encode()+"\n");
+				String output = PFProps.get(i).encode()+"\n";
+				out.write(output);
 			}
 
 			out.close();
@@ -94,8 +116,9 @@ public class RolloutSimulation {
 			for(int i=2; i<=numPlayers; i++) {
 				double value = PropabilityForRRollouts(prop.getHand(), R, i);
 				prop.setProp(i, value);
-				System.out.println(prop.toString());
+				
 			}
+			System.out.println(prop.toString());
 			
 			
 		}
