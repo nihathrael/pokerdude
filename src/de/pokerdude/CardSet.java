@@ -3,6 +3,7 @@ package de.pokerdude;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.TreeSet;
 
@@ -38,6 +39,7 @@ public class CardSet {
 	}
 
 	public Powerrating evaluate() {
+		//System.out.println("Evaluating:" + toString());
 		if(getStraightFlushRating() != null) {
 			return getStraightFlushRating();
 		} else if (containsFourOfAKind()) {
@@ -59,8 +61,17 @@ public class CardSet {
 		}
 	}
 
+
 	public Powerrating getHighestRating() {
-		return new Powerrating(new int[] { 1, cards.last().getValue() });
+		int[] rating = new int[] { 1, 0, 0, 0, 0 };
+		int b = 1;
+		Iterator<Card> cardIter = cards.descendingIterator();
+		while(cardIter.hasNext()) {
+			rating[b++] = cardIter.next().getValue();
+			if (b >= 5)
+				break;
+		}
+		return new Powerrating(rating);
 	}
 
 	public Powerrating getPairRating() {
@@ -81,7 +92,7 @@ public class CardSet {
 				rating[b++] = i;
 				mapping.remove(i);
 			}
-			if (b > 5)
+			if (b >= 5)
 				break;
 		}
 		return new Powerrating(rating);
@@ -106,7 +117,7 @@ public class CardSet {
 				rating[b++] = i;
 				mapping.remove(i);
 			}
-			if (b > 5)
+			if (b >= 5)
 				break;
 		}
 		return new Powerrating(rating);
@@ -245,6 +256,15 @@ public class CardSet {
 			res = spades;
 		}
 		return res;
+	}
+	
+	@Override
+	public String toString() {
+		String ret = "";
+		for(Card card: cards) {
+			ret += card;
+		}
+		return ret;
 	}
 
 }

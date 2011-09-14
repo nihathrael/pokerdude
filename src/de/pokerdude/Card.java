@@ -25,6 +25,9 @@ public class Card implements Comparable<Card> {
 
 	@Override
 	public int compareTo(Card o) {
+		if(value == o.value) {
+			return this.suite.compareTo(o.suite);
+		}
 		return ((Integer)value).compareTo(o.value);
 	}
 

@@ -76,6 +76,26 @@ public class PokerGame {
 		fillRiver();
 		showTable();
 		System.out.println("Pot at: " + pot);
+		showResults();
+	}
+	
+	private void showResults() {
+		ArrayList<Card> allCards = new ArrayList<Card>(this.flop);
+		allCards.add(this.river);
+		allCards.add(this.turn);
+		
+		for(Player player: players) {
+			ArrayList<Card> eval = new ArrayList<Card>(allCards);
+			eval.addAll(player.getCards());
+			CardSet cards = new CardSet(eval);
+			System.out.println("Player:" + player.name);
+			System.out.print("Cards:");
+			System.out.println(player.getCards());
+			System.out.print("Cardset:");
+			System.out.println(cards);
+			System.out.print("Results:" );
+			System.out.println(cards.evaluate());
+		}
 	}
 
 	private void giveCards() {

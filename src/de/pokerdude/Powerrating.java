@@ -23,5 +23,18 @@ public class Powerrating implements Comparable<Powerrating> {
 		}
 	}
 	
+	@Override
+	public String toString() {
+		StringBuilder ret = new StringBuilder("Powerrating(");
+		for(int i=0;i<rating.length;i++) {
+			ret.append(rating[i]);
+			if(i != rating.length-1) {
+				ret.append(',');
+			}
+		}
+		ret.append(')');
+		return ret.toString();
+		
+	}
 	
 }
