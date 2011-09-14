@@ -22,18 +22,17 @@ public class PreFlopPropability {
 		String[] tokens = toParse.split(";");
 		
 		Suite s;
-		if(tokens[1].equals(tokens[3]))
+		if(tokens[0].equals(tokens[1]))
 			s = Suite.CLUBS;
 		else s = Suite.DIAMONDS;
 
 		hand = new ArrayList<Card>();
-		hand.add(new Card(Suite.CLUBS, Integer.parseInt(tokens[0])));
-		hand.add(new Card(s, Integer.parseInt(tokens[2])));
-		
-		props = new double[tokens.length-4];
+		hand.add(new Card(Suite.CLUBS, Integer.parseInt(tokens[2])));
+		hand.add(new Card(s, Integer.parseInt(tokens[3])));
+		props = new double[tokens.length-2];
 		
 		for(int i=4;i<tokens.length;i++) {
-			props[i-4] = Integer.parseInt(tokens[i]);
+			props[i-2] = Double.parseDouble(tokens[i]);
 		}
 	}
 	
@@ -54,6 +53,7 @@ public class PreFlopPropability {
 		if(hand.get(0).getSuite() == hand.get(1).getSuite())
 			result = "A;A;";
 		else result = "A;B;";
+		result = result + hand.get(0).getValue() + ";" + hand.get(1).getValue() + ";";
 		for(int i=2;i<props.length;i++) {
 			result = result + props[i] + ";";
 		}
