@@ -7,12 +7,12 @@ import java.util.ArrayList;
 public class Player {
 	
 	final String name;
-	int Credits;
+	int credits;
 	ArrayList<Card> Cards;
 	
 	public Player(String name) {
 		this.name = name;
-		Credits = 1000;
+		credits = 1000;
 	}
 	
 	public ArrayList<Card> getCards() {
@@ -27,14 +27,14 @@ public class Player {
 	}
 	
 	public int getBetPreFlop() {
-		return (int) (Math.random()*10);
+		return 10;
 	}
 	
 	public int getBetPreTurn() {
-		return (int) (Math.random()*100);
+		return 10;
 	}
 	
 	public int getBetPreRiver() {
-		return (int) (Math.random()*1000);
+		return 10;
 	}
 }

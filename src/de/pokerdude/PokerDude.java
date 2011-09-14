@@ -9,9 +9,11 @@ public class PokerDude {
 		//game.addPlayer(new PlayerAI("P2",4));
 		game.addPlayer(new Player("P3"));
 		game.addPlayer(new Player("P4"));
-
-
-		game.startGame();
+		int rounds = 100;
+		for(int i=0; i<rounds;i++) {
+			game.playRound();
+		}
+		
 		// Here all the fun starts
 	}
 

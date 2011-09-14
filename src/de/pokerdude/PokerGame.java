@@ -57,28 +57,45 @@ public class PokerGame {
 		return flop;
 	}
 	
-	public void startGame() {
+	public void resetGame() {
+		deck.generateNewDeck();
+		this.flop.clear();
+		this.river = null;
+		this.pot = 0;
+		this.turn = null;
+	}
+	
+	public void playRound() {
+		resetGame();
 		giveCards();
 		showTable();
 		for(Player player: players) {
-			pot += player.getBetPreFlop();
+			int bet = player.getBetPreFlop();
+			pot += bet;
+			player.credits -= bet;
 		}
 		fillFlop();
 		showTable();
 		for(Player player: players) {
-			pot += player.getBetPreTurn();
+			int bet = player.getBetPreTurn();
+			pot += bet;
+			player.credits -= bet;
 		}
 		fillTurn();
 		showTable();
 		for(Player player: players) {
-			pot += player.getBetPreRiver();
+			int bet = player.getBetPreRiver();
+			pot += bet;
+			player.credits -= bet;
 		}
 		fillRiver();
 		showTable();
 		System.out.println("Pot at: " + pot);
 		showResults();
+		showCredits();
 	}
 	
+	@SuppressWarnings("null")
 	private void showResults() {
 		ArrayList<Card> allCards = new ArrayList<Card>(this.flop);
 		allCards.add(this.river);
@@ -101,6 +118,17 @@ public class PokerGame {
 		System.out.println("=======================");
 		System.out.println("Winner: " + winner.name);
 		System.out.println("He wins with: " + winningResult);
+		System.out.println("He wins the pot: " + pot);
+		System.out.println("=======================");
+		winner.credits += pot;
+	}
+	
+	private void showCredits() {
+		System.out.println("=======================");
+		System.out.println("Player credits:");
+		for(Player player: players) {
+			System.out.println(player.name + ":" + player.credits);
+		}
 		System.out.println("=======================");
 	}
 

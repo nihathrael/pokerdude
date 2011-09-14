@@ -12,7 +12,7 @@ public class PlayerAI extends Player {
 	public int getBetPreFlop() {
 		RolloutSimulation RS = new RolloutSimulation();
 		
-		return (int)((double)Credits * RS.GetPropabilityFromList(Cards, numPlayers));
+		return (int)((double)credits * RS.GetPropabilityFromList(Cards, numPlayers));
 	}
 	
 }
