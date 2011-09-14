@@ -16,7 +16,7 @@ public class RolloutSimulation {
 		for(int i=2; i<15; i++) {
 			for(int j=2; j<=i; j++) {
 				PreFlopPropability p;
-				//Prototype hands for all unsuited Classes including pairs
+				//Prototype hands for all unsuited equivalence classes including pairs
 				p = new PreFlopPropability(new Card(Suite.CLUBS, j), new Card(Suite.DIAMONDS, i), numPlayers);
 				PFProps.add(p);
 				
@@ -36,7 +36,9 @@ public class RolloutSimulation {
 			for(int i=2; i<=numPlayers; i++) {
 				double value = PropabilityForRRollouts(prop.getHand(), R, i);
 				prop.setProp(i, value);
+				
 			}
+			System.out.println(prop.toString());
 			
 		}
 	}
@@ -62,9 +64,15 @@ public class RolloutSimulation {
 		if(PFProps == null) CalculatePreFlopPropabilities(100);
 		
 		for(PreFlopPropability p: PFProps) {
-			if(compareHands(normHand, p.getHand())) 
+			if(compareHands(normHand, p.getHand())) {
+				
 				return p.getProp(numPlayers);
+			}
+				
 		}
+		
+
+		
 		return -1;
 
 	}
@@ -137,13 +145,26 @@ public class RolloutSimulation {
 	private int evalRollout(ArrayList<Card> PlayerCards, ArrayList<Card> CommonCards, int NumPlayers, Deck d) {
 		
 		ArrayList<Card> OtherPlayerCards = d.getCards(NumPlayers*2-2);
-		int PlayerRating = 0; //PokerUtil.EvaluateCardSet(PlayerCards, CommonCards);
+		ArrayList<Card> allcards = new ArrayList<Card>();
+		
+		allcards.addAll(PlayerCards);
+		allcards.addAll(CommonCards);
+		CardSet cardset = new CardSet(allcards);
+		Powerrating playerRating = cardset.evaluate();
+		
 		boolean tie=false;
 		
 		for(int i=0;i<(NumPlayers-1);i++) {
-			int Rating = 0; //PokerUtil.EvaluateCardSet(OtherPlayerCards.subList(i, i+2), CommonCards);
-			if(PlayerRating == Rating) tie=true;;
-			if(PlayerRating < Rating) return -1;	
+			allcards = new ArrayList<Card>();
+			allcards.addAll(OtherPlayerCards.subList(i, i+2));
+			allcards.addAll(CommonCards);
+			cardset = new CardSet(allcards);
+	
+			Powerrating rating = cardset.evaluate();
+			
+			int compareResult = rating.compareTo(playerRating);
+			if(compareResult > 0) return -1;
+			else if(compareResult == 0) tie = true;	
 		}
 		
 		if(tie==true) return 0;
