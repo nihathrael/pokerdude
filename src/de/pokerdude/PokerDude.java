@@ -7,6 +7,8 @@ public class PokerDude {
 		PokerGame game = new PokerGame();
 		game.addPlayer(new Player("P1"));
 		game.addPlayer(new Player("P2"));
+		game.addPlayer(new Player("P3"));
+		game.addPlayer(new Player("P4"));
 		game.startGame();
 		// Here all the fun starts
 	}

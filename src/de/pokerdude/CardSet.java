@@ -100,7 +100,7 @@ public class CardSet {
 
 	public Powerrating getDoublePairRating() {
 		int pairnum = 0;
-		int[] pairs = new int[2];
+		int[] pairs = new int[3];
 		for (Entry<Integer, Integer> entry : mapping.entrySet()) {
 			if (entry.getValue() >= 2) {
 				pairs[pairnum++] = entry.getKey();

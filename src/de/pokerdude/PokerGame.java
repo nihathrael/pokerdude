@@ -83,19 +83,25 @@ public class PokerGame {
 		ArrayList<Card> allCards = new ArrayList<Card>(this.flop);
 		allCards.add(this.river);
 		allCards.add(this.turn);
+		Player winner = null;
+		Powerrating winningResult = null;
 		
 		for(Player player: players) {
-			ArrayList<Card> eval = new ArrayList<Card>(allCards);
-			eval.addAll(player.getCards());
-			CardSet cards = new CardSet(eval);
 			System.out.println("Player:" + player.name);
 			System.out.print("Cards:");
 			System.out.println(player.getCards());
-			System.out.print("Cardset:");
-			System.out.println(cards);
+			Powerrating result = PokerUtils.evaluateCards(player.getCards(), flop, turn, river);
+			if(winningResult == null || result.compareTo(winningResult) == 1) {
+				winningResult = result;
+				winner = player;
+			}
 			System.out.print("Results:" );
-			System.out.println(cards.evaluate());
+			System.out.println(result);
 		}
+		System.out.println("=======================");
+		System.out.println("Winner: " + winner.name);
+		System.out.println("He wins with: " + winningResult);
+		System.out.println("=======================");
 	}
 
 	private void giveCards() {
