@@ -38,7 +38,9 @@ public class Deck {
 			if(withoutTheseCards != null) {
 				for(Card card: withoutTheseCards) {
 					if((card.getSuite() == suite) && (card.getValue() == i))
+					{
 						continue;
+					}
 				}
 			}
 			deck.add(new Card(suite, i));
@@ -50,8 +52,9 @@ public class Deck {
 	}
 	
 	public ArrayList<Card> getCards(int count) {
-		ArrayList<Card> result = (ArrayList<Card>) deck.subList(deck.size()-count, deck.size());
-		deck = (ArrayList<Card>) deck.subList(0, deck.size()-count);
+		ArrayList<Card> result = new ArrayList<Card>();
+		for(int i=0;i<count;i++)
+			result.add(getCard());
 		return result;
 		
 	}

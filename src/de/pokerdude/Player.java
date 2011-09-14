@@ -7,10 +7,12 @@ import java.util.ArrayList;
 public class Player {
 	
 	final String name;
+	int Credits;
 	ArrayList<Card> Cards;
 	
 	public Player(String name) {
 		this.name = name;
+		Credits = 1000;
 	}
 	
 	public ArrayList<Card> getCards() {
