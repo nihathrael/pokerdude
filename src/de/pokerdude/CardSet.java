@@ -110,7 +110,7 @@ public class CardSet {
 		mapping.remove(pairs[0]);
 		mapping.remove(pairs[1]);
 
-		int[] rating = new int[] { 3, pairs[1], pairs[0], 0, 0 };
+		int[] rating = new int[] { 3, pairs[2], pairs[1], 0, 0 };
 		int b = 3;
 		for (int i = 14; i > 0; i--) {
 			if (mapping.containsKey(i)) {
@@ -128,11 +128,11 @@ public class CardSet {
 	}
 
 	public Powerrating getStraightRating() {
-		return new Powerrating(new int[] { 5, cards.last().getValue() });
+		return new Powerrating(new int[] { 5, findRow(cards) });
 	}
 
 	public Powerrating getFlushRating() {
-		if (getBiggestSet().size() > 5) {
+		if (getBiggestSet().size() >= 5) {
 			TreeSet<Card> set = getBiggestSet();
 			Card last = set.last();
 			return new Powerrating(new int[] { 6, last.getValue() });
@@ -160,7 +160,7 @@ public class CardSet {
 
 	public Powerrating getStraightFlushRating() {
 		TreeSet<Card> set = getBiggestSet();
-		if (set.size() > 5 && findRow(set)) {
+		if (set.size() >= 5 && findRow(set) != -1) {
 			Card last = set.last();
 			return new Powerrating(new int[] { 9, last.getValue() });
 		}
@@ -210,7 +210,7 @@ public class CardSet {
 	}
 
 	public boolean containsThreeOfAKind() {
-		return containsOfAKind(4);
+		return containsOfAKind(3);
 	}
 
 	public boolean containsOfAKind(int number) {
@@ -223,13 +223,13 @@ public class CardSet {
 	}
 
 	public boolean containsStraight() {
-		return findRow(cards);
+		return findRow(cards) != -1;
 	}
 
 	/**
 	 * Check if a straight row of cards for a given card set exists
 	 */
-	private boolean findRow(TreeSet<Card> cardSet) {
+	private int findRow(TreeSet<Card> cardSet) {
 		Card[] cardArray = cardSet.toArray(new Card[0]);
 		Card previous = cardSet.first();
 		int row = 1;
@@ -239,9 +239,12 @@ public class CardSet {
 			} else {
 				row = 1;
 			}
+			if(row == 5) {
+				return cardArray[i].getValue();
+			}
 			previous = cardArray[i];
 		}
-		return (row >= 5);
+		return -1;
 	}
 
 	private TreeSet<Card> getBiggestSet() {
