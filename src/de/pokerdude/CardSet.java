@@ -107,8 +107,8 @@ public class CardSet {
 			}
 		}
 		Arrays.sort(pairs);
-		mapping.remove(pairs[0]);
 		mapping.remove(pairs[1]);
+		mapping.remove(pairs[2]);
 
 		int[] rating = new int[] { 3, pairs[2], pairs[1], 0, 0 };
 		int b = 3;

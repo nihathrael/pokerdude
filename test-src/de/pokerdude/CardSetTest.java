@@ -52,6 +52,18 @@ public class CardSetTest {
 		}
 		CardSet cardSet = new CardSet(cards);
 		assertCompareToEquals(new Powerrating(new int[] {3, 4, 2, 14, 12}), cardSet.evaluate());
+		
+		cards.clear();
+		cards.add(new Card(Suite.DIAMONDS, 14));
+		cards.add(new Card(Suite.CLUBS, 6));
+		cards.add(new Card(Suite.CLUBS, 12));
+		cards.add(new Card(Suite.CLUBS, 14));
+		cards.add(new Card(Suite.DIAMONDS, 11));
+		cards.add(new Card(Suite.HEARTS, 6));
+		cards.add(new Card(Suite.HEARTS, 8));
+		cardSet = new CardSet(cards);
+		assertCompareToEquals(new Powerrating(new int[] {3, 14, 6, 12, 11}), cardSet.evaluate());
+		
 	}
 
 	@Test
