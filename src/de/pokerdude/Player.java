@@ -21,9 +21,6 @@ public class Player {
 	
 	public void setCards(ArrayList<Card> Cards) {
 		this.Cards = Cards;
-		System.out.println(name+": I just got two cards:");
-		System.out.println(Cards.get(0));
-		System.out.println(Cards.get(1));
 	}
 	
 	public int getBetPreFlop() {

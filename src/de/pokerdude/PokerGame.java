@@ -2,7 +2,11 @@ package de.pokerdude;
 
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
+
 public class PokerGame {
+	
+	static final Logger logger = Logger.getLogger(PokerGame.class);
 	
 	private ArrayList<Player> players = new ArrayList<Player>();
 	
@@ -18,7 +22,8 @@ public class PokerGame {
 	private int bigblind;
 	
 	public PokerGame() {
-		System.out.println("Game generated with " + deck.size() + " cards!");
+		logger.setLevel(PokerDude.DEBUGLEVEL);
+		logger.info("Game generated with " + deck.size() + " cards!");
 	}
 	
 	public boolean addPlayer(Player player) {
@@ -90,9 +95,9 @@ public class PokerGame {
 		}
 		fillRiver();
 		showTable();
-		System.out.println("Pot at: " + pot);
+		logger.debug("Pot at: " + pot);
 		showResults();
-		showCredits();
+		//showCredits();
 	}
 	
 	@SuppressWarnings("null")
@@ -104,43 +109,41 @@ public class PokerGame {
 		Powerrating winningResult = null;
 		
 		for(Player player: players) {
-			System.out.println("Player:" + player.name);
-			System.out.print("Cards:");
-			System.out.println(player.getCards());
+			logger.debug("Player:" + player.name);
+			logger.debug("Cards:");
+			logger.debug(player.getCards());
 			Powerrating result = PokerUtils.evaluateCards(player.getCards(), flop, turn, river);
 			if(winningResult == null || result.compareTo(winningResult) == 1) {
 				winningResult = result;
 				winner = player;
 			}
-			System.out.print("Results:" );
-			System.out.println(result);
+			logger.debug("Results:" );
+			logger.debug(result);
 		}
-		System.out.println("=======================");
-		System.out.println("Winner: " + winner.name);
-		System.out.println("He wins with: " + winningResult);
-		System.out.println("He wins the pot: " + pot);
-		System.out.println("=======================");
+		logger.debug("=======================");
+		logger.debug("Winner: " + winner.name);
+		logger.debug("He wins with: " + winningResult);
+		logger.debug("He wins the pot: " + pot);
+		logger.debug("=======================");
 		winner.credits += pot;
 	}
 	
-	private void showCredits() {
-		System.out.println("=======================");
-		System.out.println("Player credits:");
+	public void showCredits() {
+		logger.info("=======================");
+		logger.info("Player credits:");
 		for(Player player: players) {
-			System.out.println(player.name + ":" + player.credits);
+			logger.info(player.name + ":" + player.credits);
 		}
-		System.out.println("=======================");
+		logger.info("=======================");
 	}
 
 	private void giveCards() {
-		System.out.println("Giving cards...");
 		for(Player player: players) {
 			ArrayList<Card> hand = new ArrayList<Card>();
 			hand.add(deck.getCard());
 			hand.add(deck.getCard());
 			player.setCards(hand);
 		}
-		System.out.println("Done!");
 	}
 	
 	private void fillFlop() {
@@ -158,13 +161,12 @@ public class PokerGame {
 	}
 	
 	public void showTable() {
-		System.out.println("Current table:");
-		System.out.print("Flop: ");
+		logger.debug("Current table:");
+		logger.debug("Flop: ");
 		for(Card card: flop) {
-			System.out.print(card);
+			logger.debug(card);
 		}
-		System.out.println();
-		System.out.println("Turn:  " + turn);
-		System.out.println("River: " + river);
+		logger.debug("Turn:  " + turn);
+		logger.debug("River: " + river);
 	}
 }
