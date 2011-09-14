@@ -1,6 +1,11 @@
 package de.pokerdude;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 
 
@@ -8,6 +13,59 @@ public class RolloutSimulation {
 	
 	//List of propapilities filled by CalculatePreFlopPropabilities
 	private ArrayList<PreFlopPropability> PFProps = null;
+	
+	public RolloutSimulation() {
+		
+		
+		File file = new File("PreflopPropabilities.csv");
+		if(file.exists())
+			try {
+				ReadTable(file);
+			} catch (IOException e) {
+
+				e.printStackTrace();
+			}
+		else {
+			System.out.println("**The table with preflop propabilities could not be found.\n" +
+					"**Type either [A] to abort or a Number that specifies the amount of\n" +
+					"**Rollout games for each possible Hand.");
+			
+			Scanner in = new Scanner(System.in);
+			String input = in.nextLine();
+			int R=10;
+			if(input.contains("A")) System.exit(0);
+			else {
+				R = Integer.parseInt(input);
+				CalculatePreFlopPropabilities(R);
+				SaveTable(file);
+			}
+		}
+				
+	}
+	
+	public void ReadTable(File f) throws IOException {
+		
+			
+	}
+	
+	public void SaveTable(File f) {
+		
+		
+		try {
+			f.createNewFile();
+
+			FileWriter fstream = new FileWriter(f);
+			BufferedWriter out = new BufferedWriter(fstream);
+			
+			for(int i=0;i<PFProps.size();i++) {
+				out.write(PFProps.get(i).encode()+"\n");
+			}
+
+			out.close();
+		} catch (Exception e) {
+				System.err.println("Error: " + e.getMessage());
+		}
+	}
 	
 	public void CalculatePreFlopPropabilities(int R) {
 		int numPlayers = 10;
@@ -36,10 +94,18 @@ public class RolloutSimulation {
 			for(int i=2; i<=numPlayers; i++) {
 				double value = PropabilityForRRollouts(prop.getHand(), R, i);
 				prop.setProp(i, value);
-				
+				System.out.println(prop.toString());
 			}
-			System.out.println(prop.toString());
 			
+			
+		}
+		
+	
+	}
+	
+	public void PrintTable() {
+		for(PreFlopPropability prop: PFProps) {
+			System.out.println(prop.toString());
 		}
 	}
 	
@@ -61,7 +127,7 @@ public class RolloutSimulation {
 		ArrayList<Card> normHand = normalizeHand(Hand);
 		
 		//ToDo: Read from file
-		if(PFProps == null) CalculatePreFlopPropabilities(100);
+		if(PFProps == null) CalculatePreFlopPropabilities(1000);
 		
 		for(PreFlopPropability p: PFProps) {
 			if(compareHands(normHand, p.getHand())) {

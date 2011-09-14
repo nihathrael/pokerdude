@@ -49,6 +49,17 @@ public class PreFlopPropability {
 		return hand;
 	}
 	
+	public String encode() {
+		String result="";
+		if(hand.get(0).getSuite() == hand.get(1).getSuite())
+			result = "A;A;";
+		else result = "A;B;";
+		for(int i=2;i<props.length;i++) {
+			result = result + props[i] + ";";
+		}
+		return result;
+	}
+	
 	public String toString() {
 		String result = "Propabilities for " + hand.get(0).toString() + ", " 
 				+ hand.get(1).toString() + ": ";
