@@ -11,7 +11,7 @@ public class Powerrating implements Comparable<Powerrating> {
 	@Override
 	public int compareTo(Powerrating other) {
 		int i=0;
-		while(i<rating.length && rating[i] == other.rating[0]) {
+		while(i<rating.length && rating[i] == other.rating[i]) {
 			i++;
 		}
 		if(i == rating.length) {
