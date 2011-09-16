@@ -62,6 +62,14 @@ public class PokerGame {
 		return flop;
 	}
 	
+	public ArrayList<Card> getCommonCards() {
+		ArrayList<Card> commonCards = new ArrayList<Card>();
+		if(this.getRiver() != null) commonCards.add(this.getRiver());
+		if(this.getTurn() != null) commonCards.add(this.getTurn());
+		commonCards.addAll(this.getFlop());
+		return commonCards;
+	}
+	
 	public void resetGame() {
 		deck.generateNewDeck();
 		this.flop.clear();

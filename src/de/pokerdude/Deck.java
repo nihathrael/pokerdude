@@ -18,10 +18,14 @@ public class Deck {
 	
 	//ToDo: Check if works properly
 	@SuppressWarnings("unchecked")
-	public Deck(Deck copy) {
+	public Deck(Deck copy, boolean shuffled) {
 		this.deck = (ArrayList<Card>) copy.deck.clone();
-		Collections.shuffle(deck);
+		
+		if(shuffled) 
+			Collections.shuffle(deck);
 	}
+	
+	
 	
 	public Deck(ArrayList<Card> withoutTheseCards) {
 		this.withoutTheseCards = withoutTheseCards;

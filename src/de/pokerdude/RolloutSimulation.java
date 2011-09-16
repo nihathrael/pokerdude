@@ -210,7 +210,7 @@ public class RolloutSimulation {
 	
 	
 	public int rollout(Player p, PokerGame g) {
-		Deck d = new Deck(g.getDeck());
+		Deck d = new Deck(g.getDeck(), true);
 		
 		Card Turn = g.getTurn();
 		if(Turn == null) Turn = d.getCard();
@@ -228,7 +228,7 @@ public class RolloutSimulation {
 	
 	
 	public int rollout(ArrayList<Card> PlayerCards, ArrayList<Card> CommonCards, int NumPlayers, Deck _d) {
-		Deck d = new Deck(_d);	
+		Deck d = new Deck(_d, true);	
 		if(CommonCards==null) CommonCards = new ArrayList<Card>();
 		while(CommonCards.size()<5) CommonCards.add(d.getCard());
 		return evalRollout(PlayerCards,CommonCards,NumPlayers,d);
