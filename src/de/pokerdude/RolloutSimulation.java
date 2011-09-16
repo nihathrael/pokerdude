@@ -93,14 +93,19 @@ public class RolloutSimulation {
 		int numPlayers = 10;
 		PFProps = new ArrayList<PreFlopPropability>();
 		
+		PreFlopPropability p;
+		
 		for(int i=2; i<15; i++) {
 			for(int j=2; j<=i; j++) {
-				PreFlopPropability p;
+				
 				//Prototype hands for all unsuited equivalence classes including pairs
 				p = new PreFlopPropability(new Card(Suite.CLUBS, j), new Card(Suite.DIAMONDS, i), numPlayers);
 				PFProps.add(p);
-				
+			}
+		}
 					
+		for(int i=2; i<15; i++) {
+			for(int j=2; j<=i; j++) {
 				//Suited prototypes 
 				if(i!=j) {
 					p = new PreFlopPropability(new Card(Suite.CLUBS, j), new Card(Suite.CLUBS, i), numPlayers);

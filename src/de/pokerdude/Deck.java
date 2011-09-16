@@ -16,6 +16,7 @@ public class Deck {
 		}
 	}
 	
+	//ToDo: Check if works properly
 	@SuppressWarnings("unchecked")
 	public Deck(Deck copy) {
 		this.deck = (ArrayList<Card>) copy.deck.clone();
