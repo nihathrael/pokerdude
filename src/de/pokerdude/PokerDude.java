@@ -18,7 +18,7 @@ public class PokerDude {
 		game.addPlayer(new PlayerAI("P2",4));
 		game.addPlayer(new PlayerAIHandStrength("P3", game));
 		game.addPlayer(new Player("P4"));
-		int rounds = 1000;
+		int rounds = 100;
 		for(int i=0; i<rounds;i++) {
 			game.playRound();
 		}

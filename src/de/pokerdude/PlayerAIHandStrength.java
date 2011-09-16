@@ -70,6 +70,10 @@ public class PlayerAIHandStrength extends Player {
 		double losses=0;
 		
 		Card card1,card2;
+		ArrayList<Card> commonCards = new ArrayList<Card>();
+		if(game.getRiver() != null) commonCards.add(game.getRiver());
+		if(game.getTurn() != null) commonCards.add(game.getTurn());
+		commonCards.addAll(game.getFlop());
 		
 		for(int i=0; i<numCards;i++) {
 			card1 = deckClone1.getCard();
@@ -79,12 +83,7 @@ public class PlayerAIHandStrength extends Player {
 				if(card1.compareTo(card2) != 0) {
 					ArrayList<Card> opponentCards=new ArrayList<Card>();
 					ArrayList<Card> playerCards = new ArrayList<Card>();
-					ArrayList<Card> commonCards = new ArrayList<Card>();
-					
-					if(game.getRiver() != null) commonCards.add(game.getRiver());
-					if(game.getTurn() != null) commonCards.add(game.getTurn());
-					commonCards.addAll(game.getFlop());
-					
+
 					playerCards.addAll(this.Cards);
 					playerCards.addAll(commonCards);
 					opponentCards.add(card1);
