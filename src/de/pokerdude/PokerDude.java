@@ -7,7 +7,7 @@ import org.apache.log4j.Logger;
 public class PokerDude {
 	
 	static final Logger logger = Logger.getLogger(PokerDude.class);
-	static final Level DEBUGLEVEL = Level.DEBUG;
+	static final Level DEBUGLEVEL = Level.INFO;
 	
 	public static void main(String args[]) {
 		BasicConfigurator.configure();
@@ -18,9 +18,14 @@ public class PokerDude {
 		game.addPlayer(new PlayerAI("P2",4));
 		game.addPlayer(new PlayerAIHandStrength("P3", game));
 		game.addPlayer(new Player("P4"));
-		int rounds = 200;
+		int rounds = 10000;
+		int displayevery = 1000;
 		for(int i=0; i<rounds;i++) {
 			game.playRound();
+			if(i%displayevery ==0) {
+				logger.info(i);
+				game.showCredits();
+			}
 		}
 		game.showCredits();
 		

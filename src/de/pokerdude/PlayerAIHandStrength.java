@@ -38,6 +38,10 @@ public class PlayerAIHandStrength extends Player {
 		
 		double handStrength = calcHandstrength();
 		
+		if(handStrength < 0.3) {
+			return 0;
+		}
+		
 		bet = (int)(30 * handStrength);
 		
 		return bet;
@@ -54,6 +58,10 @@ public class PlayerAIHandStrength extends Player {
 		
 		
 		double handStrength = calcHandstrength();
+		
+		if(handStrength < 0.3) {
+			return 0;
+		}
 
 		bet = (int)(30 * handStrength);
 		
