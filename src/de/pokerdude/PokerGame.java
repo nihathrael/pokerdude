@@ -140,7 +140,7 @@ public class PokerGame {
 		logger.info("=======================");
 		logger.info("Player credits:");
 		for(Player player: players) {
-			logger.info(player.name + ":" + player.credits);
+			logger.info(player.name + ":" + player.credits + " NOK");
 		}
 		logger.info("=======================");
 	}
