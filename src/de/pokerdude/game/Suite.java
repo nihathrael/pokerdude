@@ -1,4 +1,4 @@
-package de.pokerdude;
+package de.pokerdude.game;
 
 public enum Suite {
 	

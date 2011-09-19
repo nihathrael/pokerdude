@@ -1,6 +1,9 @@
-package de.pokerdude;
+package de.pokerdude.utils;
 
 import java.util.ArrayList;
+
+import de.pokerdude.game.Card;
+import de.pokerdude.game.CardSet;
 
 public class PokerUtils {
 	
@@ -12,12 +15,6 @@ public class PokerUtils {
 		allCards.add(river);
 		CardSet cardset = new CardSet(allCards);
 		return cardset.evaluate();
-	}
-	
-	public static int calcFlush() {
-		int value = -1;
-		
-		return value;
 	}
 
 }

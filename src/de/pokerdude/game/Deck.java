@@ -1,9 +1,7 @@
-package de.pokerdude;
+package de.pokerdude.game;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
-import java.util.Random;
 
 public class Deck {
 	private ArrayList<Card> deck = new ArrayList<Card>();
@@ -11,9 +9,6 @@ public class Deck {
 	
 	public Deck() {
 		generateNewDeck();
-		for(Card card: deck) {
-			System.out.println(card);
-		}
 	}
 	
 	//ToDo: Check if works properly

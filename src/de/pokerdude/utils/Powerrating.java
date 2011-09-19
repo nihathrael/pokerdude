@@ -1,4 +1,4 @@
-package de.pokerdude;
+package de.pokerdude.utils;
 
 public class Powerrating implements Comparable<Powerrating> {
 

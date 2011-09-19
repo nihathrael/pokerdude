@@ -1,6 +1,9 @@
-package de.pokerdude;
+package de.pokerdude.simulation;
 
 import java.util.ArrayList;
+
+import de.pokerdude.game.Card;
+import de.pokerdude.game.Suite;
 
 public class PreFlopPropability {
 	private ArrayList<Card> hand;

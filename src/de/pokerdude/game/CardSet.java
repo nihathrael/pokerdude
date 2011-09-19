@@ -1,4 +1,4 @@
-package de.pokerdude;
+package de.pokerdude.game;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.TreeSet;
+
+import de.pokerdude.utils.Powerrating;
 
 public class CardSet {
 

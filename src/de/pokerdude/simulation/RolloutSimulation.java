@@ -1,4 +1,4 @@
-package de.pokerdude;
+package de.pokerdude.simulation;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -11,15 +11,28 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import org.apache.log4j.Logger;
+
+import de.pokerdude.PokerDude;
+import de.pokerdude.game.Card;
+import de.pokerdude.game.CardSet;
+import de.pokerdude.game.Deck;
+import de.pokerdude.game.PokerGame;
+import de.pokerdude.game.Suite;
+import de.pokerdude.players.Player;
+import de.pokerdude.utils.Powerrating;
+
 
 
 public class RolloutSimulation {
+	
+	static final Logger logger = Logger.getLogger(RolloutSimulation.class);
 	
 	//List of propabilities filled by CalculatePreFlopPropabilities
 	private ArrayList<PreFlopPropability> PFProps = null;
 	
 	public RolloutSimulation() {
-		
+		logger.setLevel(PokerDude.DEBUGLEVEL);
 		
 		File file = new File("PreflopPropabilities.csv");
 		if(file.exists())
@@ -59,7 +72,7 @@ public class RolloutSimulation {
 		  while ((strLine = br.readLine()) != null)   {
 			  PreFlopPropability p = new PreFlopPropability(strLine);
 			  PFProps.add(p);
-			  System.out.println(p.toString());
+			  logger.debug(p.toString());
 		  }
 		  //Close the input stream
 		  in.close();
@@ -85,7 +98,7 @@ public class RolloutSimulation {
 
 			out.close();
 		} catch (Exception e) {
-				System.err.println("Error: " + e.getMessage());
+				logger.error("Error: " + e.getMessage());
 		}
 	}
 	
@@ -123,18 +136,12 @@ public class RolloutSimulation {
 				prop.setProp(i, value);
 				
 			}
-			System.out.println(prop.toString());
+			logger.info(prop.toString());
 			
 			
 		}
 		
 	
-	}
-	
-	public void PrintTable() {
-		for(PreFlopPropability prop: PFProps) {
-			System.out.println(prop.toString());
-		}
 	}
 	
 	public double PropabilityForRRollouts(ArrayList<Card> Hand, int R, int numPlayers) {
