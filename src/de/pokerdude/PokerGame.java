@@ -108,7 +108,6 @@ public class PokerGame {
 		//showCredits();
 	}
 	
-	@SuppressWarnings("null")
 	private void showResults() {
 		ArrayList<Card> allCards = new ArrayList<Card>(this.flop);
 		allCards.add(this.river);
