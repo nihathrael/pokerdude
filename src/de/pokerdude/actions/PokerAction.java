@@ -1,7 +1,23 @@
 package de.pokerdude.actions;
 
-public interface PokerAction {
+import de.pokerdude.game.PokerGame;
+import de.pokerdude.players.Player;
+
+public abstract class PokerAction {
 	
-	public void execute();
+	protected final PokerGame game;
+	protected final Player player;
+	
+	public PokerAction(PokerGame game, Player player) {
+		this.game = game;
+		this.player = player;
+	}
+	
+	public Player getPlayer() { return player; }
+	public PokerGame getGame() { return game; }
+	
+	public void execute() {
+		game.getOpponenModelTable().recordAction(this);
+	}
 
 }

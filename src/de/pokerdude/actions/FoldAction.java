@@ -3,18 +3,15 @@ package de.pokerdude.actions;
 import de.pokerdude.game.PokerGame;
 import de.pokerdude.players.Player;
 
-public class FoldAction implements PokerAction {
-	
-	private final PokerGame game;
-	private final Player player;
+public class FoldAction extends PokerAction {
 	
 	public FoldAction(PokerGame game, Player player) {
-		this.game = game;
-		this.player = player;
+		super(game, player);
 	}
 
 	@Override
 	public void execute() {
+		super.execute();
 		game.foldPlayer(player);
 	} 
 

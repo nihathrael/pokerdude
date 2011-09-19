@@ -3,7 +3,10 @@ package de.pokerdude.simulation;
 import java.util.ArrayList;
 
 import de.pokerdude.game.Card;
+import de.pokerdude.game.CardSet;
+import de.pokerdude.game.Deck;
 import de.pokerdude.game.Suite;
+import de.pokerdude.utils.Powerrating;
 
 public class PreFlopPropability {
 	private ArrayList<Card> hand;
@@ -76,6 +79,10 @@ public class PreFlopPropability {
 		return result;
 		
 	}
+	
+	
+	
+
 
 	
 	

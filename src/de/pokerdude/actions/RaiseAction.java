@@ -3,20 +3,18 @@ package de.pokerdude.actions;
 import de.pokerdude.game.PokerGame;
 import de.pokerdude.players.Player;
 
-public class RaiseAction implements PokerAction {
+public class RaiseAction extends PokerAction {
 
-	private final PokerGame game;
-	private final Player player;
 	private int amount;
 	
 	public RaiseAction(PokerGame game, Player player, int amount) {
-		this.game = game;
-		this.player = player;
+		super(game, player);
 		this.amount = amount;
 	}
 
 	@Override
 	public void execute() {
+		super.execute();
 		game.bet(player, amount);
 	}
 

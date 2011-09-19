@@ -2,9 +2,11 @@ package de.pokerdude.game;
 
 import java.util.ArrayList;
 
+
 import org.apache.log4j.Logger;
 
 import de.pokerdude.PokerDude;
+import de.pokerdude.opponentmodeling.OpponentModelTable;
 import de.pokerdude.players.Player;
 import de.pokerdude.utils.PokerUtils;
 import de.pokerdude.utils.Powerrating;
@@ -15,6 +17,8 @@ public class PokerGame {
 	
 	private ArrayList<Player> players = new ArrayList<Player>();
 	private ArrayList<Player> playersInRound = new ArrayList<Player>();
+	
+	private OpponentModelTable opponentModelTable = new OpponentModelTable();
 	
 	int currentPlayer = 0;
 	
@@ -28,6 +32,8 @@ public class PokerGame {
 	private int pot;
 
 	private int currentBet;
+	
+	private int numRaises=0;
 	
 	public PokerGame() {
 		logger.setLevel(PokerDude.DEBUGLEVEL);
@@ -61,8 +67,24 @@ public class PokerGame {
 		return flop;
 	}
 	
+	public int getPot() {
+		return pot;
+	}
+	
 	public int getNumberOfPlayers() {
 		return this.players.size();
+	}
+	
+	public int getNumberOfRaises() {
+		return numRaises;
+	}
+	
+	public ArrayList<Player> getPlayersInRound() {
+		return this.playersInRound;
+	}
+	
+	public OpponentModelTable getOpponenModelTable() {
+		return opponentModelTable;
 	}
 	
 	public ArrayList<Card> getCommonCards() {
@@ -80,11 +102,14 @@ public class PokerGame {
 		this.river = null;
 		this.pot = 0;
 		this.currentBet = 10; // Minimum first blind
+		this.numRaises = 0;
 		this.turn = null;
 		this.players.add(this.players.remove(0));
 		this.playersInRound.clear();
 		this.playersInRound.addAll(this.players);
 	}
+	
+	
 	
 	public void playRound() {
 		resetGame();
@@ -151,6 +176,8 @@ public class PokerGame {
 			logger.info(player.name + ":" + player.credits + " NOK");
 		}
 		logger.info("=======================");
+	
+	
 	}
 
 	private void giveCards() {
@@ -186,6 +213,13 @@ public class PokerGame {
 		logger.debug("River: " + river);
 	}
 
+	public GameState getState() {
+		if(flop.size() == 0) return GameState.PREFLOP;
+		if(turn == null) return GameState.PRETURN;
+		if(river == null) return GameState.PRERIVER;
+		else return GameState.POSTRIVER;
+	}
+	
 	public void foldPlayer(Player player) {
 		playersInRound.remove(player);
 	}
@@ -195,8 +229,11 @@ public class PokerGame {
 	}
 	
 	public void bet(Player player, int amount) {
+		if(amount > currentBet) numRaises++;
+		
 		player.credits -= amount;
 		pot += amount;
+		
 		currentBet = amount;
 	}
 }
