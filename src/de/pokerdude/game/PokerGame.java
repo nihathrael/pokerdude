@@ -1,14 +1,22 @@
-package de.pokerdude;
+package de.pokerdude.game;
 
 import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
+
+import de.pokerdude.PokerDude;
+import de.pokerdude.players.Player;
+import de.pokerdude.utils.PokerUtils;
+import de.pokerdude.utils.Powerrating;
 
 public class PokerGame {
 	
 	static final Logger logger = Logger.getLogger(PokerGame.class);
 	
 	private ArrayList<Player> players = new ArrayList<Player>();
+	private ArrayList<Player> playersInRound = new ArrayList<Player>();
+	
+	int currentPlayer = 0;
 	
 	private Deck deck = new Deck();
 	
@@ -18,8 +26,8 @@ public class PokerGame {
 	
 	
 	private int pot;
-	private int smallblind;
-	private int bigblind;
+
+	private int currentBet;
 	
 	public PokerGame() {
 		logger.setLevel(PokerDude.DEBUGLEVEL);
@@ -35,15 +43,6 @@ public class PokerGame {
 	
 	public ArrayList<Player> getPlayers() {
 		return players;
-	}
-	
-	
-	public int getSmallBlind() {
-		return smallblind;
-	}
-	
-	public int getBigBlind() {
-		return bigblind;
 	}
 	
 	public Card getTurn() {
@@ -76,34 +75,40 @@ public class PokerGame {
 	
 	public void resetGame() {
 		deck.generateNewDeck();
+		
 		this.flop.clear();
 		this.river = null;
 		this.pot = 0;
+		this.currentBet = 10; // Minimum first blind
 		this.turn = null;
+		this.players.add(this.players.remove(0));
+		this.playersInRound.clear();
+		this.playersInRound.addAll(this.players);
 	}
 	
 	public void playRound() {
 		resetGame();
 		giveCards();
 		showTable();
-		for(Player player: players) {
-			int bet = player.getBetPreFlop();
-			pot += bet;
-			player.credits -= bet;
+		int i =0;
+		for(Player player: playersInRound.toArray(new Player[0])) {
+			if(i<2) {
+				player.getBetPreFlop(currentBet, true).execute();
+				logger.debug("Blind "+i+" forced on:" + player.name);
+				i++;
+			} else {
+				player.getBetPreFlop(currentBet, false).execute();
+			}
 		}
 		fillFlop();
 		showTable();
-		for(Player player: players) {
-			int bet = player.getBetPreTurn();
-			pot += bet;
-			player.credits -= bet;
+		for(Player player: playersInRound.toArray(new Player[0])) {
+			player.getBetPreTurn(currentBet).execute();
 		}
 		fillTurn();
 		showTable();
-		for(Player player: players) {
-			int bet = player.getBetPreRiver();
-			pot += bet;
-			player.credits -= bet;
+		for(Player player: playersInRound.toArray(new Player[0])) {
+			player.getBetPreRiver(currentBet).execute();
 		}
 		fillRiver();
 		showTable();
@@ -119,7 +124,7 @@ public class PokerGame {
 		Player winner = null;
 		Powerrating winningResult = null;
 		
-		for(Player player: players) {
+		for(Player player: playersInRound) {
 			logger.debug("Player:" + player.name);
 			logger.debug("Cards:");
 			logger.debug(player.getCards());
@@ -149,7 +154,7 @@ public class PokerGame {
 	}
 
 	private void giveCards() {
-		for(Player player: players) {
+		for(Player player: playersInRound) {
 			ArrayList<Card> hand = new ArrayList<Card>();
 			hand.add(deck.getCard());
 			hand.add(deck.getCard());
@@ -179,5 +184,19 @@ public class PokerGame {
 		}
 		logger.debug("Turn:  " + turn);
 		logger.debug("River: " + river);
+	}
+
+	public void foldPlayer(Player player) {
+		playersInRound.remove(player);
+	}
+	
+	public void call(Player player) {
+		bet(player, currentBet);
+	}
+	
+	public void bet(Player player, int amount) {
+		player.credits -= amount;
+		pot += amount;
+		currentBet = amount;
 	}
 }

@@ -1,8 +1,18 @@
-package de.pokerdude;
+package de.pokerdude.players;
 
 import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
+
+import de.pokerdude.actions.CallAction;
+import de.pokerdude.actions.FoldAction;
+import de.pokerdude.actions.PokerAction;
+import de.pokerdude.actions.RaiseAction;
+import de.pokerdude.game.Card;
+import de.pokerdude.game.CardSet;
+import de.pokerdude.game.Deck;
+import de.pokerdude.game.PokerGame;
+import de.pokerdude.utils.Powerrating;
 
 public class PlayerAIHandStrength extends PlayerAI {
 
@@ -13,19 +23,23 @@ public class PlayerAIHandStrength extends PlayerAI {
 	}
 
 	@Override
-	public int getBetPreTurn() {
+	public PokerAction getBetPreTurn(int minBet) {
 		double handStrength = calcHandstrength();
 		int bet = 0;
 		if(handStrength < 0.3) {
-			bet = (int) (30 * handStrength);
+			return new FoldAction(game, this);
 		}
-
-		return bet;
+		
+		bet = (int) (30 * handStrength);
+		if (bet < minBet) {
+			return new CallAction(game, this);
+		}
+		return new RaiseAction(game, this, bet);
 	}
 
 	@Override
-	public int getBetPreRiver() {
-		return getBetPreTurn();
+	public PokerAction getBetPreRiver(int minBet) {
+		return getBetPreTurn(minBet);
 	}
 
 	private ArrayList<Card> getKnownCards() {
@@ -52,7 +66,8 @@ public class PlayerAIHandStrength extends PlayerAI {
 
 		while (currentDeck.size() > 0) {
 			card1 = currentDeck.getCard(); // First take a card
-			deckToCompare = new Deck(currentDeck, false); // Make a copy for comparison work
+			deckToCompare = new Deck(currentDeck, false); // Make a copy for
+															// comparison work
 
 			while (deckToCompare.size() > 0) {
 				card2 = deckToCompare.getCard();

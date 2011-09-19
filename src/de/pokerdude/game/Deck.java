@@ -1,4 +1,4 @@
-package de.pokerdude;
+package de.pokerdude.game;
 
 import java.util.ArrayList;
 import java.util.Collections;

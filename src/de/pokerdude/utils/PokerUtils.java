@@ -1,6 +1,9 @@
-package de.pokerdude;
+package de.pokerdude.utils;
 
 import java.util.ArrayList;
+
+import de.pokerdude.game.Card;
+import de.pokerdude.game.CardSet;
 
 public class PokerUtils {
 	

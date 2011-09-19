@@ -1,4 +1,4 @@
-package de.pokerdude;
+package de.pokerdude.game;
 
 public class Card implements Comparable<Card> {
 	

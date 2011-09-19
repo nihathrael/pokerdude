@@ -1,4 +1,4 @@
-package de.pokerdude;
+package de.pokerdude.simulation;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -12,6 +12,15 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import org.apache.log4j.Logger;
+
+import de.pokerdude.PokerDude;
+import de.pokerdude.game.Card;
+import de.pokerdude.game.CardSet;
+import de.pokerdude.game.Deck;
+import de.pokerdude.game.PokerGame;
+import de.pokerdude.game.Suite;
+import de.pokerdude.players.Player;
+import de.pokerdude.utils.Powerrating;
 
 
 

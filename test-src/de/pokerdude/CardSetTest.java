@@ -6,6 +6,11 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
+import de.pokerdude.game.Card;
+import de.pokerdude.game.CardSet;
+import de.pokerdude.game.Suite;
+import de.pokerdude.utils.Powerrating;
+
 public class CardSetTest {
 
 	private void assertCompareToEquals(Powerrating o, Powerrating o2) {		
