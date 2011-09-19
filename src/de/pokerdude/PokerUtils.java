@@ -13,12 +13,6 @@ public class PokerUtils {
 		CardSet cardset = new CardSet(allCards);
 		return cardset.evaluate();
 	}
-	
-	public static int calcFlush() {
-		int value = -1;
-		
-		return value;
-	}
 
 }
 

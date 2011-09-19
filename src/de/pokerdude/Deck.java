@@ -9,9 +9,6 @@ public class Deck {
 	
 	public Deck() {
 		generateNewDeck();
-		for(Card card: deck) {
-			System.out.println(card);
-		}
 	}
 	
 	//ToDo: Check if works properly

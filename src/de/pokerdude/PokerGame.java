@@ -62,6 +62,10 @@ public class PokerGame {
 		return flop;
 	}
 	
+	public int getNumberOfPlayers() {
+		return this.players.size();
+	}
+	
 	public ArrayList<Card> getCommonCards() {
 		ArrayList<Card> commonCards = new ArrayList<Card>();
 		if(this.getRiver() != null) commonCards.add(this.getRiver());
