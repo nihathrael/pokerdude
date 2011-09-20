@@ -161,9 +161,6 @@ public class RolloutSimulation {
 	public double GetPropabilityFromList(ArrayList<Card> Hand, int numPlayers) {
 		ArrayList<Card> normHand = normalizeHand(Hand);
 		
-		//ToDo: Read from file
-		if(PFProps == null) CalculatePreFlopPropabilities(1000);
-		
 		for(PreFlopPropability p: PFProps) {
 			if(compareHands(normHand, p.getHand())) {
 				

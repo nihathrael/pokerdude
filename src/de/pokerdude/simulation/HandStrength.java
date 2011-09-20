@@ -1,6 +1,8 @@
 package de.pokerdude.simulation;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.TreeSet;
 
 import de.pokerdude.game.Card;
 import de.pokerdude.game.CardSet;
@@ -9,13 +11,30 @@ import de.pokerdude.utils.Powerrating;
 
 public class HandStrength {
 	
+	static HashMap<String, Double> buffer = new HashMap<String, Double>();
+	static int hits = 0;
+	static int miss = 0;
+	
 	public static double calcHandstrength(ArrayList<Card> playerCards, ArrayList<Card> commonCards, int numberOfActivePlayers) {
 		
 		ArrayList<Card> knownCards = new ArrayList<Card>();
 		knownCards.addAll(playerCards);
 		knownCards.addAll(commonCards);
 		
+		TreeSet<Card> cards = new TreeSet<Card>(knownCards);
+		StringBuffer ident = new StringBuffer();
+		for(Card card: cards) {
+			ident.append(card.getSuite());
+			ident.append(card.getValue());
+		}
+		String identString = ident.toString();
 		
+		if(buffer.containsKey(identString)) {
+			hits++;
+			//System.out.println("Buffer hit: " + hits/(double)miss);
+			return Math.pow(buffer.get(identString),(double)numberOfActivePlayers);
+		}
+		miss++;
 		Deck currentDeck = new Deck(knownCards);
 		Deck deckToCompare = null;
 
@@ -55,9 +74,11 @@ public class HandStrength {
 
 			}
 		}
+		
+		double result = ((wins + ties / 2) / (wins + ties + losses));
+		buffer.put(identString, result);
 
-		return Math.pow(((wins + ties / 2) / (wins + ties + losses)),
-				(double) numberOfActivePlayers);
+		return Math.pow(result,(double)numberOfActivePlayers);
 	}
 }
 
