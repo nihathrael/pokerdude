@@ -1,43 +1,49 @@
 package de.pokerdude.opponentmodeling;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.log4j.Logger;
 
 import de.pokerdude.actions.PokerAction;
 import de.pokerdude.game.Card;
 import de.pokerdude.game.PokerGame;
-import de.pokerdude.players.Player;
 import de.pokerdude.simulation.HandStrength;
 import de.pokerdude.simulation.RolloutSimulation;
-
 
 
 public class OpponentModelTable {
 	
 	static final Logger logger = Logger.getLogger(PokerGame.class);
 	
-	private ArrayList<Context> contexts;
+	HashMap<Context, ArrayList<Double>> ModelTable;
+	
+	static RolloutSimulation rs = new RolloutSimulation();
+
 	
 	public OpponentModelTable() {
-		contexts = new ArrayList<Context>();
-
+		ModelTable = new HashMap<Context, ArrayList<Double>>();
+		
 	}
 	
-	
-	public Context getContextThatContains(PokerAction action) {
-		for(Context entry : contexts) {
-			if(entry.contains(action)) {
-				return entry;
-			}
-		}
-		return null;
+	public ArrayList<Double> getRatingsForAction(PokerAction action) {
+		
+		Context queryContext = new Context(action);
+		return ModelTable.get(queryContext);	
+		
+		
 	}
 	
 	public double getAverageForContextThatContains(PokerAction action) {
-		Context c = getContextThatContains(action);
-		if(c == null) return 0;
-		else return c.getAverageRating();
+		ArrayList<Double> ratings = getRatingsForAction(action);
+		
+		if(ratings == null) return 0;
+		
+		double sum=0;
+		for(int i=0; i<ratings.size();i++)
+			sum += ratings.get(i);
+		
+		return sum / ratings.size();
 		
 	}
 	
@@ -45,40 +51,38 @@ public class OpponentModelTable {
 		
 		double rating = calcRating(action);
 		
-		for(Context entry : contexts) {
-			if(entry.contains(action)) {
-				entry.addRating(rating);
-				return;
-			}
-		}
+		Context c = new Context(action);
 		
-		Context newContext = new Context(action);
-		newContext.addRating(rating);
-		contexts.add(newContext);
+		ArrayList<Double> ratings = ModelTable.get(c);
+		
+		if(ratings == null) {
+			ratings = new ArrayList<Double>();
+			ratings.add(rating);
+			ModelTable.put(c, ratings);
+			return;
+		} else {
+			ratings.add(rating);
+		}	
 	}
 	
 	private double calcRating(PokerAction action) {
+		
 		PokerGame game = action.getGame();
 		ArrayList<Card> commonCards = game.getCommonCards();
 		ArrayList<Card> playerCards = action.getPlayer().getCards();
 		
 		if(commonCards.size() == 0) {
-			RolloutSimulation rs = new RolloutSimulation();
 			return rs.GetPropabilityFromList(playerCards, game.getNumberOfPlayers());			
 		} else {
-			return HandStrength.calcHandstrength(playerCards, commonCards, game.getPlayersInRound().size());
+			return 1;
+			//return HandStrength.calcHandstrength(playerCards, commonCards, game.getPlayersInRound().size());
 		}
+		
 		
 	}
 	
 	
 	public void print() {
-		logger.info("Contexts:");
-		
-		for(Context c : contexts) {
-			logger.info(c.toString());
-			
-		}
 	}
 	
 	

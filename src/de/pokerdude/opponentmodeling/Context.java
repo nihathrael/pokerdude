@@ -60,5 +60,20 @@ public class Context {
 		return action.getPlayer().name + ": " + getAverageRating();
 	}
 	
+	@Override
+	public boolean equals(Object o) {
+		if(this == o) return true; 
+		if(!(o instanceof Context)) return false;
+		
+		Context c = (Context)o;
+		
+		if((this.state == c.state) &&
+			(this.action.getClass().equals(c.action.getClass())) &&
+			(this.action.getPlayer().name.equals(c.action.getPlayer().name)))
+			return true;
+		return false;
+			
+	}
+	
 	
 }
