@@ -15,7 +15,7 @@ public class RaiseAction extends PokerAction {
 	@Override
 	public void execute() {
 		super.execute();
-		game.bet(player, amount);
+		game.raise(player, amount);
 	}
 
 }

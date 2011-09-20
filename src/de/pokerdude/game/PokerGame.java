@@ -34,6 +34,9 @@ public class PokerGame {
 	private int currentBet;
 	
 	private int numRaises=0;
+	int noChanges = 0;
+	int resetNumber = 0;
+	int bigblind = 10;
 	
 	public PokerGame() {
 		logger.setLevel(PokerDude.DEBUGLEVEL);
@@ -115,31 +118,46 @@ public class PokerGame {
 		resetGame();
 		giveCards();
 		showTable();
-		int i =0;
-		for(Player player: playersInRound.toArray(new Player[0])) {
-			if(i<2) {
-				player.getBetPreFlop(currentBet, true).execute();
-				logger.debug("Blind "+i+" forced on:" + player.name);
-				i++;
-			} else {
-				player.getBetPreFlop(currentBet, false).execute();
-			}
-		}
+		bettingRound(GameState.PREFLOP, true);
 		fillFlop();
 		showTable();
-		for(Player player: playersInRound.toArray(new Player[0])) {
-			player.getBetPreTurn(currentBet).execute();
-		}
+		bettingRound(GameState.PRETURN, false);
 		fillTurn();
 		showTable();
-		for(Player player: playersInRound.toArray(new Player[0])) {
-			player.getBetPreRiver(currentBet).execute();
-		}
+		bettingRound(GameState.PRERIVER, false);
 		fillRiver();
 		showTable();
+		bettingRound(GameState.POSTRIVER, false);
 		logger.debug("Pot at: " + pot);
 		showResults();
 		//showCredits();
+	}
+	
+	private void bettingRound(GameState round, boolean blinds) {
+		logger.debug("Betting round:" + round);
+		int i =0;
+		noChanges = 0;
+		currentBet = 0;
+		resetNumber = playersInRound.size();
+		while(noChanges < resetNumber) {
+			Player player = this.playersInRound.remove(0);
+			this.playersInRound.add(player);
+			if(blinds && i<2) {
+				logger.debug("Blind "+i+" forced on:" + player);
+				int blind = bigblind/(2-i);
+				if(currentBet < blind) {
+					currentBet = blind;
+				}
+				player.getBet(round, currentBet, true).execute();
+				i++;
+			} else {
+				player.getBet(round, currentBet, false).execute();
+			}
+		}
+		for(Player player: playersInRound) {
+			this.pot += player.lastBet;
+			player.lastBet = 0;
+		}
 	}
 	
 	private void showResults() {
@@ -221,19 +239,39 @@ public class PokerGame {
 	}
 	
 	public void foldPlayer(Player player) {
+		noChanges++;
 		playersInRound.remove(player);
+		this.pot += player.lastBet;
+		player.lastBet = 0;
+		logger.debug(player + " folding");
 	}
 	
 	public void call(Player player) {
-		bet(player, currentBet);
+		int amount = currentBet-player.lastBet;
+		player.credits -= amount;
+		player.lastBet = currentBet;
+		this.noChanges++;
+		logger.debug(player + " calling:" + currentBet);
 	}
 	
-	public void bet(Player player, int amount) {
+	
+	public void raise(Player player, int amount) {
 		if(amount > currentBet) numRaises++;
 		
-		player.credits -= amount;
-		pot += amount;
-		
+		int difference = amount-player.lastBet;
+		player.credits -= difference;
+		player.lastBet = amount;
 		currentBet = amount;
+		this.noChanges = 1;
+		this.resetNumber = playersInRound.size();
+		logger.debug(player + " raising to:" + currentBet);
+	}
+	
+	public int getCurrentPot() {
+		int totalpot = this.pot;
+		for(Player player: players) {
+			totalpot += player.lastBet;
+		}
+		return totalpot;
 	}
 }

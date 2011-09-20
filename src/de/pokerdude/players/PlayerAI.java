@@ -24,17 +24,29 @@ public class PlayerAI extends Player {
 	}
 	
 	@Override
-	public PokerAction getBetPreFlop(int minBet, boolean force) {
+	public PokerAction getBetPreFlop(int minBet, boolean forcedBlind) {
 		double prop = RS.GetPropabilityFromList(Cards, game.getNumberOfPlayers());
-		if(!force && prop < 0.3) {
-			return new FoldAction(game, this);
-		}
 		int bet = (int)(30 * prop);
-		if(bet < minBet) {
-			return new CallAction(game, this);
+		if(forcedBlind) {
+			// We have to because of forcedBlind
+			if(prop < 0.3 || bet < minBet) {
+				// We really don't want to play (that much), but we have to
+				return new RaiseAction(game, this, minBet);
+			} else {
+				// We want to bet more than we have to!
+				return new RaiseAction(game, this, bet);
+			}
+		} else {
+			if(prop < 0.3) {
+				// Chances are bad -> fold
+				return new FoldAction(game, this);
+			} else if (bet <= minBet) {
+				// We want to stay in,  but not bet more than we have to
+				return new CallAction(game, this);
+			} 
+			// We want MORE!
+			return new RaiseAction(game, this, bet); 
 		}
-		logger.debug(name + " betting " + bet);
-		return new RaiseAction(game, this, bet);
 	}
 	
 	
