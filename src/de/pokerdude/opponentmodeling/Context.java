@@ -21,7 +21,7 @@ public class Context {
 		numActivePlayers = action.getGame().getPlayersInRound().size();
 		numRaises = action.getGame().getNumberOfRaises();
 		
-		int callAmount = 10; //Not yet implemented. I think in PokerGame the amount to call equals currentbet is that correct?
+		int callAmount = 10; //Not yet implemented. I think in PokerGame the amount to call equals currentbet: is that correct?
 		int potSize = action.getGame().getPot();
 		
 		potOdds = callAmount / (callAmount + potSize);
