@@ -8,6 +8,7 @@ import de.pokerdude.actions.RaiseAction;
 import de.pokerdude.game.Card;
 import de.pokerdude.game.GameState;
 import de.pokerdude.game.PokerGame;
+import de.pokerdude.opponentmodeling.OpponentModelTable;
 
 
 
@@ -18,6 +19,7 @@ public class Player {
 	ArrayList<Card> Cards;
 	final PokerGame game;
 	public int lastBet=0;
+	public OpponentModelTable model = new OpponentModelTable();
 	
 	public Player(String name, PokerGame game) {
 		this.name = name;

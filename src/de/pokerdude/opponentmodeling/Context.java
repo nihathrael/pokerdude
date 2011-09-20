@@ -3,7 +3,6 @@ package de.pokerdude.opponentmodeling;
 import java.util.ArrayList;
 
 import de.pokerdude.actions.PokerAction;
-import de.pokerdude.game.PokerGame;
 import de.pokerdude.game.GameState;
 
 public class Context {
@@ -14,10 +13,10 @@ public class Context {
 	protected PokerAction action;
 	protected ArrayList<Double> ratings;
 	
-	public Context(PokerAction action) {
+	public Context(PokerAction action, GameState gameState) {
 		this.action = action;
 		
-		state = action.getGame().getState();
+		state = gameState;
 		numActivePlayers = action.getGame().getPlayersInRound().size();
 		numRaises = action.getGame().getNumberOfRaises();
 		
@@ -67,13 +66,18 @@ public class Context {
 		
 		Context c = (Context)o;
 		
-		if((this.state == c.state) &&
+		return (this.state == c.state) &&
 			(this.action.getClass().equals(c.action.getClass())) &&
-			(this.action.getPlayer().name.equals(c.action.getPlayer().name)))
-			return true;
-		return false;
+			(this.action.getPlayer().name.equals(c.action.getPlayer().name));
 			
 	}
+	
+	@Override
+	public int hashCode() {
+		return action.getPlayer().name.hashCode()+action.getClass().toString().hashCode();
+	}
+	
+	
 	
 	
 }

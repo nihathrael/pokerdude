@@ -128,6 +128,9 @@ public class PokerGame {
 		fillRiver();
 		showTable();
 		bettingRound(GameState.POSTRIVER, false);
+		for (Player player : playersInRound) {
+			player.model.calculateRatings();
+		}
 		logger.debug("Pot at: " + pot);
 		showResults();
 		//showCredits();

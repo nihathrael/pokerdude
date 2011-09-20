@@ -17,7 +17,7 @@ public abstract class PokerAction {
 	public PokerGame getGame() { return game; }
 	
 	public void execute() {
-		game.getOpponenModelTable().recordAction(this);
+		player.model.recordAction(this, game.getState());
 	}
 
 }
