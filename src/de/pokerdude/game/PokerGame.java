@@ -43,6 +43,10 @@ public class PokerGame {
 		logger.info("Game generated with " + deck.size() + " cards!");
 	}
 	
+	public int getCurrentBet() {
+		return currentBet;
+	}
+	
 	public boolean addPlayer(Player player) {
 		if(players.size() < 10) {
 			return players.add(player);
@@ -140,6 +144,7 @@ public class PokerGame {
 		logger.debug("Betting round:" + round);
 		int i =0;
 		noChanges = 0;
+		numRaises = 0;
 		currentBet = 0;
 		resetNumber = playersInRound.size();
 		while(noChanges < resetNumber) {
@@ -259,7 +264,7 @@ public class PokerGame {
 	
 	
 	public void raise(Player player, int amount) {
-		if(amount > currentBet) numRaises++;
+		numRaises++;
 		
 		int difference = amount-player.lastBet;
 		player.credits -= difference;

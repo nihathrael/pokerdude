@@ -37,7 +37,9 @@ public class OpponentModelTable {
 		for (int i = 0; i < ratings.size(); i++)
 			sum += ratings.get(i);
 
-		return sum / ratings.size();
+		double average = sum / ratings.size();
+		logger.debug("Average: " + average);
+		return average;
 	}
 
 	public void recordAction(PokerAction action, GameState gameState) {
@@ -54,11 +56,17 @@ public class OpponentModelTable {
 				ratings = new ArrayList<Double>();
 				ratings.add(rating);
 				modelTable.put(cont, ratings);
-				return;
 			} else {
-				ratings.add(rating);
+				if(ratings.size()>1000) {
+					logger.debug("Ratings size: " + ratings.size());
+					logger.debug(cont);
+					continue;
+				} else {
+					ratings.add(rating);
+				}
 			}
 		}
+		logger.debug("Modeltable entries: " + modelTable.size());
 	}
 
 	private double calcRating(Context cont) {

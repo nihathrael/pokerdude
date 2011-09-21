@@ -26,13 +26,13 @@ public class PokerDude {
 		game.addPlayer(new PlayerAIHandStrength("P3", game));
 		game.addPlayer(new PlayerAIModelling("P4", game));
 		
-		int rounds = 1000;
-		int displayevery = 10;
+		int rounds = 10000;
+		int displayevery = 100;
 
 		for(int i=0; i<rounds;i++) {
 			game.playRound();
 			if(i%displayevery ==0) {
-				logger.info(i);
+				logger.info("Round: " + i);
 				game.showCredits();
 			}
 		}
