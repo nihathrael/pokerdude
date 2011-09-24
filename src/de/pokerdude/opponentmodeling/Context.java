@@ -1,10 +1,11 @@
 package de.pokerdude.opponentmodeling;
 
-import java.util.ArrayList;
+import java.util.TreeSet;
 
 import de.pokerdude.actions.PokerAction;
-import de.pokerdude.game.PokerGame;
+import de.pokerdude.game.Card;
 import de.pokerdude.game.GameState;
+import de.pokerdude.game.PokerGame;
 
 public class Context {
 
@@ -12,68 +13,83 @@ public class Context {
 	protected int numActivePlayers, numRaises;
 	protected double potOdds;
 	protected PokerAction action;
-	protected ArrayList<Double> ratings;
-	
-	public Context(PokerAction action) {
+	protected int potOddsBin;
+	protected String commondCards;
+
+	public Context(PokerAction action, GameState gameState) {
 		this.action = action;
-		
-		state = action.getGame().getState();
-		numActivePlayers = action.getGame().getPlayersInRound().size();
-		numRaises = action.getGame().getNumberOfRaises();
-		
-		int callAmount = 10; //Not yet implemented. I think in PokerGame the amount to call equals currentbet: is that correct?
-		int potSize = action.getGame().getPot();
-		
-		potOdds = callAmount / (callAmount + potSize);
-		
-		ratings = new ArrayList<Double>();
-		
-	}
-	
-	public void addRating(double val) {
-		ratings.add(val);
-	}
-	
-	public double getAverageRating() {
-		if(ratings.size() == 0) return 0;
-		
-		double sum = 0;
-		for(int i=0; i<ratings.size();i++) {
-			sum += ratings.get(i);
+
+		state = gameState;
+		PokerGame game = action.getGame();
+		numActivePlayers = game.getPlayersInRound().size();
+		numRaises = game.getNumberOfRaises();
+
+		TreeSet<Card> cards = new TreeSet<Card>(game.getCommonCards());
+		StringBuffer buffer = new StringBuffer(20);
+		for (Card card : cards) {
+			buffer.append(card.getValue());
+			if (card.compareTo(cards.last()) != 0) {
+				buffer.append('-');
+			}
 		}
-		return sum / ratings.size();
-	}
-	
-	public boolean contains(PokerAction action) {
-		
-		//equal GameState, action and player		
-		if((action.getGame().getState() == state) && 
-		   (this.action.getClass() == action.getClass()) &&
-		   (action.getPlayer().equals(this.action.getPlayer()))) {
-			return true;
+		commondCards = buffer.toString();
+
+		int callAmount = game.getCurrentBet() - action.getPlayer().lastBet;
+		int potSize = game.getPot();
+		if (callAmount + potSize > 0) {
+			potOdds = callAmount / (callAmount + potSize);
+		} else {
+			potOdds = 0;
 		}
 
-		return false;
+		if (potOdds < 0.1) {
+			potOddsBin = 0;
+		} else if (potOddsBin < 0.2) {
+			potOddsBin = 1;
+		} else if (potOddsBin < 0.3) {
+			potOddsBin = 2;
+		} else {
+			potOddsBin = 4;
+		}
+
 	}
-	
+
 	public String toString() {
-		return action.getPlayer().name + ": " + getAverageRating();
+		return new StringBuffer().append("Context(").append(action.getPlayer())
+				.append("PotOdds(").append(potOddsBin).append(") Ident(")
+				.append(commondCards).append(')').append("State(")
+				.append(state).append(")").toString();
+
 	}
-	
+
 	@Override
 	public boolean equals(Object o) {
-		if(this == o) return true; 
-		if(!(o instanceof Context)) return false;
-		
-		Context c = (Context)o;
-		
-		if((this.state == c.state) &&
-			(this.action.getClass().equals(c.action.getClass())) &&
-			(this.action.getPlayer().name.equals(c.action.getPlayer().name)))
+		if (this == o)
 			return true;
-		return false;
-			
+		if (!(o instanceof Context))
+			return false;
+
+		Context c = (Context) o;
+
+		boolean stateMatch = this.state == c.state;
+		boolean actionMatch = this.action.getClass()
+				.equals(c.action.getClass());
+		boolean playerMatch = this.action.getPlayer().name.equals(c.action
+				.getPlayer().name);
+
+		boolean potOddsMatch = potOddsBin == c.potOddsBin;
+		boolean raisesMatch = numRaises == c.numRaises;
+		boolean cardsMatch = commondCards.equals(c.commondCards);
+
+		return stateMatch && actionMatch && playerMatch && potOddsMatch
+				&& raisesMatch && cardsMatch;
+
 	}
-	
-	
+
+	@Override
+	public int hashCode() {
+		return action.getPlayer().name.hashCode()
+				+ action.getClass().toString().hashCode();
+	}
+
 }
