@@ -21,10 +21,16 @@ public class OpponentModelTable {
 	static RolloutSimulation rs = new RolloutSimulation();
 
 	
+	
 	public OpponentModelTable() {
 		ModelTable = new HashMap<Context, ArrayList<Double>>();
 		
 	}
+	
+	public void startNewRound() {
+		
+	}
+	
 	
 	public ArrayList<Double> getRatingsForAction(PokerAction action) {
 		
@@ -74,8 +80,7 @@ public class OpponentModelTable {
 		if(commonCards.size() == 0) {
 			return rs.GetPropabilityFromList(playerCards, game.getNumberOfPlayers());			
 		} else {
-			return 1;
-			//return HandStrength.calcHandstrength(playerCards, commonCards, game.getPlayersInRound().size());
+			return HandStrength.calcHandstrength(playerCards, commonCards, game.getPlayersInRound().size());
 		}
 		
 		
