@@ -23,8 +23,8 @@ public class PokerDude {
 		
 		game.addPlayer(new Player("P1", game));
 		game.addPlayer(new PlayerAI("P2", game));
-		game.addPlayer(new PlayerAIHandStrength("P3", game));
-		game.addPlayer(new PlayerAIModelling("P4", game));
+		game.addPlayer(new PlayerAIModelling("P3", game));
+		game.addPlayer(new PlayerAIHandStrength("P4", game));
 		
 		int rounds = 10000;
 		int displayevery = 100;

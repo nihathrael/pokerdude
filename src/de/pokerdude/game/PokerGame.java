@@ -38,6 +38,8 @@ public class PokerGame {
 	int resetNumber = 0;
 	int bigblind = 10;
 	
+	int maxBet = 100;
+	
 	public PokerGame() {
 		logger.setLevel(PokerDude.DEBUGLEVEL);
 		logger.info("Game generated with " + deck.size() + " cards!");
@@ -76,6 +78,16 @@ public class PokerGame {
 	
 	public int getPot() {
 		return pot;
+	}
+	
+	public double getPotOdds(Player p) {
+		int callAmount = getCurrentBet() - p.lastBet;
+		int potSize = getPot();
+		if (callAmount + potSize > 0) {
+			return callAmount / (callAmount + potSize);
+		} else {
+			return 0;
+		}
 	}
 	
 	public int getNumberOfPlayers() {
@@ -147,7 +159,13 @@ public class PokerGame {
 		numRaises = 0;
 		currentBet = 0;
 		resetNumber = playersInRound.size();
+		int counter = 0;
 		while(noChanges < resetNumber) {
+			counter++;
+			if(counter%20 == 0) logger.info("Betting Whileschleife: " + counter);
+			
+			if(currentBet >= maxBet) break;
+			
 			Player player = this.playersInRound.remove(0);
 			this.playersInRound.add(player);
 			if(blinds && i<2) {
