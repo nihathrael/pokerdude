@@ -1,0 +1,138 @@
+% Template for computer science thesis at the TU Munich
+% Authors Benedikt Mas y Parareda, Johannes Becker, Gunnar Schroeder, Elmar Juergens
+
+\documentclass[11pt,a4paper]{article}
+
+%Enable DVI forward search
+%\usepackage[active]{srcltx}
+
+\usepackage{multicol}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{rotating}
+\usepackage{listings}
+\usepackage{cite}
+\usepackage{url}
+\usepackage{latexsym}
+\usepackage{makeidx}
+\usepackage{color}
+\usepackage{natbib}
+\usepackage{array}
+\usepackage{todonotes}
+
+\lstset{
+        basicstyle=\scriptsize\ttfamily, % Standardschrift
+        numbers=left,               % Ort der Zeilennummern
+        numberstyle=\tiny,          % Stil der Zeilennummern
+        %stepnumber=2,               % Abstand zwischen den Zeilennummern
+        numbersep=5pt,              % Abstand der Nummern zum Text
+        tabsize=2,                  % Groesse von Tabs
+        %extendedchars=true,         %
+        breaklines=true,            % Zeilen werden Umgebrochen
+        keywordstyle=\color{red}\ttfamily,
+   		frame=b,         
+%        keywordstyle=[1]\textbf,    % Stil der Keywords
+ %       keywordstyle=[2]\textbf,    %
+  %      keywordstyle=[3]\textbf,    %
+   %     keywordstyle=[4]\textbf,   \sqrt{\sqrt{}} %
+        stringstyle=\color{blue}\ttfamily, % Farbe der String
+        showspaces=false,           % Leerzeichen anzeigen ?
+        showtabs=false,             % Tabs anzeigen ?
+        xleftmargin=17pt,
+        framexleftmargin=17pt,
+        framexrightmargin=5pt,
+        framexbottommargin=4pt,
+        %backgroundcolor=\color{lightgray},
+        %showstringspaces=false,      % Leerzeichen in Strings anzeigen ?        
+		language=Java
+}
+\lstloadlanguages{Java}
+\usepackage{caption}
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{\colorbox[cmyk]{0.88, 0.44, 0.0,0.0}{\parbox{\textwidth}{\hspace{15pt}#1#2#3}}  }
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white, singlelinecheck=false, margin=0pt, font={bf,footnotesize}}
+
+\definecolor{darkgreen}{cmyk}{0.7, 0, 1, 0.5}
+\definecolor{darkblue}{rgb}{0.1, 0.1, 0.5}
+
+\lstdefinelanguage{diff}
+{
+keywords={+, -, \ , @@, diff, index, new},
+sensitive=false,
+morecomment=[l][""]{\ },
+morecomment=[l][\color{darkgreen}]{+},
+morecomment=[l][\color{red}]{-},
+morecomment=[l][\color{darkblue}]{@@},
+morecomment=[l][\color{darkblue}]{diff},
+morecomment=[l][\color{darkblue}]{index},
+morecomment=[l][\color{darkblue}]{new},
+morecomment=[l][\color{darkblue}]{similarity},
+morecomment=[l][\color{darkblue}]{rename},
+}
+
+\makeindex
+
+
+\usepackage{geometry,mflogo,xspace,texnames,path,booktabs,bm}
+\usepackage[hyperindex,bookmarks,pdfborder=0,plainpages=false,pdfpagelabels]{hyperref}
+
+
+%Settings applicable to the complete document
+
+%Breaks URLs properly and draws them in a nice font
+\urlstyle{sm}
+
+\renewcommand{\ttdefault}{pcr} % Courier has a bold shape, default tt does not
+
+
+%Decrease the default indentation of paragraphs
+\parindent=0.3cm
+
+%new or changed commands
+\renewcommand\contentsname{Table of Content}
+\newcommand{\chapref}[1]{Chapter~\ref{#1}}
+\newcommand{\secref}[1]{Section~\ref{#1}}
+\newcommand{\appref}[1]{Appendix~\ref{#1}}
+\newcommand{\tabref}[1]{Table~\ref{#1}}
+\newcommand{\figref}[2][]{Figure~\ref{#2}#1}
+\newcommand{\listref}[2][]{Listing~\ref{#2}#1}
+
+\newcommand{\UH}{\textit{Unknown Horizons}}
+\newcommand{\OS}{open-source}
+\newcommand{\BOW}{\textit{Battle for Wesnoth}}
+\newcommand{\AD}{\textit{0 A.D.}}
+\newcommand{\GLEST}{\textit{Mega Glest}}
+
+\begin{document}
+%\bibliographystyle{plainnat}
+
+\input{titlepage.tex}
+%\input{abstract.tex}
+%\input{acknowledgement.tex}
+
+
+% Table of Contents
+\setcounter{tocdepth}{1}                % Sets depth of table of contents. 0 is chapter, 1 is sections, 2 is subsections
+\setcounter{secnumdepth}{2}             % Sets depth of numbering of toc contents
+\tableofcontents
+
+\pagestyle{headings}
+
+% Chapters. Each one in its own file
+\input{chapter01.tex}
+\input{chapter02.tex}
+\input{chapter03.tex}
+\input{chapter04.tex}
+\input{chapter05.tex}
+\input{chapter06.tex}
+
+%\appendix
+
+%\input{appendix01.tex}
+
+%\bibliography{references}
+
+\end{document}
