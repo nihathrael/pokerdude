@@ -15,6 +15,7 @@ public class Context {
 	protected PokerAction action;
 	protected int potOddsBin;
 	protected String commondCards;
+	protected String identName;
 
 	public Context(PokerAction action, GameState gameState) {
 		this.action = action;
@@ -51,14 +52,16 @@ public class Context {
 		} else {
 			potOddsBin = 4;
 		}
+		
+		identName = new StringBuffer().append("Context(").append(action.getPlayer())
+				.append("PotOdds(").append(potOddsBin).append(") Ident(")
+				.append(commondCards).append(')').append("State(")
+				.append(state).append(")").toString();
 
 	}
 
 	public String toString() {
-		return new StringBuffer().append("Context(").append(action.getPlayer())
-				.append("PotOdds(").append(potOddsBin).append(") Ident(")
-				.append(commondCards).append(')').append("State(")
-				.append(state).append(")").toString();
+		return identName;
 
 	}
 
@@ -88,8 +91,7 @@ public class Context {
 
 	@Override
 	public int hashCode() {
-		return action.getPlayer().name.hashCode()
-				+ action.getClass().toString().hashCode();
+		return toString().hashCode();
 	}
 
 }

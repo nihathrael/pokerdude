@@ -30,5 +30,5 @@ public class Card implements Comparable<Card> {
 		}
 		return ((Integer)value).compareTo(o.value);
 	}
-
+	
 }

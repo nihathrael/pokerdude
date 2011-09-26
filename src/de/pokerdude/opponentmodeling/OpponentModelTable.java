@@ -16,43 +16,20 @@ public class OpponentModelTable {
 
 	static final Logger logger = Logger.getLogger(PokerGame.class);
 
-	HashMap<Context, ArrayList<Double>> modelTable;
+	HashMap<Context, ContextAverage> modelTable;
 
 	static RolloutSimulation rs = new RolloutSimulation();
 
-	
 	public OpponentModelTable() {
-		modelTable = new HashMap<Context, ArrayList<Double>>();
-		
+		modelTable = new HashMap<Context, ContextAverage>(1000);
+
 	}
-	
+
 	public void startNewRound() {
-		
+
 	}
-	
-	
-	public ArrayList<Double> getRatingsForAction(PokerAction action, GameState state) {
-		
-		Context queryContext = new Context(action, state);
-		return modelTable.get(queryContext);	
-	}
-	
+
 	public ArrayList<Context> contextBuffer = new ArrayList<Context>();
-
-	public double getAverageForContext(Context context) {
-		ArrayList<Double> ratings = modelTable.get(context);
-		
-		if (ratings == null)
-			return 0;
-
-		double sum = 0;
-		for (int i = 0; i < ratings.size(); i++)
-			sum += ratings.get(i);
-
-		double average = sum / ratings.size();
-		logger.debug("Average: " + average);
-		return average;
-	}
 
 	public void recordAction(PokerAction action, GameState gameState) {
 		Context c = new Context(action, gameState);
@@ -61,21 +38,23 @@ public class OpponentModelTable {
 
 	public void calculateRatings() {
 		for (Context cont : contextBuffer) {
-			ArrayList<Double> ratings = modelTable.get(cont);
+			if(cont.state.equals(GameState.PREFLOP)) {
+				// Skip preflop because there is no information!
+				continue;
+			}
+			ContextAverage contextAverage = modelTable.get(cont);
 			double rating = calcRating(cont);
 
-			if (ratings == null) {
-				ratings = new ArrayList<Double>();
-				ratings.add(rating);
-				modelTable.put(cont, ratings);
+			if (contextAverage == null) {
+				contextAverage = new ContextAverage(rating);
+				modelTable.put(cont, contextAverage);
 			} else {
-				if(ratings.size()>1000) {
-					logger.debug("Ratings size: " + ratings.size());
-					logger.debug(cont);
-					continue;
-				} else {
-					ratings.add(rating);
-				}
+				logger.debug("Ratings size: " + contextAverage.size());
+				logger.debug(cont);
+				contextAverage.addEntry(rating);
+				//if(contextAverage.size() > 10000) {
+				//	logger.debug(cont + " size: " + contextAverage.size());
+				//}
 			}
 		}
 		logger.debug("Modeltable entries: " + modelTable.size());
@@ -106,12 +85,45 @@ public class OpponentModelTable {
 			return rs.GetPropabilityFromList(playerCards,
 					game.getNumberOfPlayers());
 		} else {
-			return HandStrength.calcHandstrength(playerCards, commonCards, game.getPlayersInRound().size());
+			return HandStrength.calcHandstrength(playerCards, commonCards, game
+					.getPlayersInRound().size());
 		}
 
 	}
 
-	public void print() {
+	class ContextAverage {
+		private double runningAverage;
+		private int numberEntries;
+
+		public ContextAverage(double average) {
+			runningAverage = average;
+			numberEntries = 1;
+		}
+
+		public double addEntry(double value) {
+			runningAverage *= numberEntries;
+			numberEntries++;
+			runningAverage += value;
+			runningAverage /= numberEntries;
+			
+			return runningAverage;
+		}
+
+		public double getAverage() {
+			return runningAverage;
+		}
+
+		public int size() {
+			return numberEntries;
+		}
+	}
+
+	public double getAverageForContext(Context context) {
+		ContextAverage contextAverage = modelTable.get(context);
+		if (contextAverage == null) {
+			return 0;
+		}
+		return contextAverage.getAverage();
 	}
 
 }

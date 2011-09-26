@@ -37,7 +37,6 @@ public class PokerDude {
 			}
 		}
 		game.showCredits();
-		game.getOpponenModelTable().print();
 		
 		// Here all the fun starts
 	}
