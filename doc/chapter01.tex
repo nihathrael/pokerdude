@@ -115,15 +115,22 @@ calls. The pre flop betting behaviour is carried over from \textbf{PlayerAI}.
 
 \subsubsection{Code structure}
 
-To implement opponent modeling, we introduced one class \textbf{Context} that stores the game situation at a point of time. The equals method is used in a way that all contexts that differ in a certain range are equal. Thus the way of implementing the equals method effects on how narrow or wide a context is.
-The class \textbf{OpponentModelTable} is instanciated for each player. It records the players actions and if the player reaches showdown the hand strengths are mapped onto the context bins. For that purpose an additional class \textbf{ContextAvarage} is used that helps with calculating the average.
-As stated before each player is equipped with an OpponentModelTable a context can be created out of a game situation that can be used to query the map, to fetch the average.
-The AI players that use the opponent modeling technique can access each players \textbf{OpponentModelTable} by extracting the active players from the game and using their \textbf{OpponentModelTable} object.
+To implement opponent modeling, we introduced one class \textbf{Context} that stores the game situation at a point of
+time. The equals method is used in a way that all contexts that differ in a certain range are equal. Thus the way of
+implementing the equals method effects on how narrow or wide a context is.
+The class \textbf{OpponentModelTable} is instanciated for each player. It records the players actions and if the player
+reaches showdown the hand strengths are mapped onto the context bins. For that purpose an additional class
+\textbf{ContextAvarage} is used that helps with calculating the average.
+As stated before each player is equipped with an \textbf{OpponentModelTable} a context can be created out of a game situation
+that can be used to query the map, to fetch the average.
+The AI players that use the opponent modeling technique can access each players \textbf{OpponentModelTable} by
+extracting the active players from the game and using their \textbf{OpponentModelTable} object.
 
 \subsubsection{Betting decisions}
 
-We introduced two new AI Players in phase three using opponent modeling in their betting decisions. The first one is\textbf{PlayerAIModeling}. For each player it calculates the average estimated hand strength for all actions in the current round. If the players own rating is higher than each of these avarages of estimated hand strengths, in others words the player thinks he should win, the player raises a big amount. If the player does not win against all opponents, but the hand strength is still bigger than the pot odds plus a constant summand, he raises a small amount. 
+We introduced two new AI Players in phase three using opponent modeling in their betting decisions. The first one is \textbf{PlayerAIModeling}. For each player it calculates the average estimated hand strength for all actions in the current round. If the players own rating is higher than each of these avarages of estimated hand strengths, in others words the player thinks he should win, the player raises a big amount. If the player does not win against all opponents, but the hand strength is still bigger than the pot odds plus a constant summand, he raises a small amount. 
 If the hand stength is only a little higher than the pot odds the player calls and otherwise if it is lower he folds.
+
 \textbf{PlayerAIModeling} calculates the average estimated hand strengths in the same way as the first player, but uses the results in a different way. This player folds if he looses against all opponents if the number of opponents for which results from the opponent model are provided is at least two. Otherwise he behaves in the similar way as \textbf{PlayerAIModeling}. The constant that is added to pot odds to differentiate between raising and calling is bigger and the raised amount is linear to the current bet in the game. 
 
 
