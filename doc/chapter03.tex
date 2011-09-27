@@ -1,5 +1,26 @@
-\section{State-Of-The-Art}
+\section{Opponent Modelling}
+In this section we explain our opponent model and the contexts on which it is based.
 
-\subsection{Related Work}
+\subsection{Model Details}
+We have one model per player, which every other player can access. The model contains a mapping for \textit{context} ->
+\textit{handstrength} pairs played by the player. The pairs are only recorded if the player is part of the showdown at
+the end of a single game. If a context appears multiple times, the average of all recorded handstrengths is used. All
+context-handstrength pairs are saved in a \textit{HashMap} for very fast access to the data.
 
-\subsection{Literature}
+\subsection{Context Details}
+We use fairly specific contexts. Our contexts carry the following information to identify them:
+\begin{itemize}
+    \item The game-state (PreTurn, PreRiver, etc.)
+    \item The action the player playen (raise, call, fold)
+    \item The player this context is valid for
+    \item The current pot-odds, devided into four different bins
+    \item The number of raises that have been played in this betting round
+    \item The common cards' values on the table, the suite is ignored
+\end{itemize}
+
+The pot-odds is discretized into five different bins: pot-odds < 0.1, pot-odds < 0.2, pot-odds < 0.3 and pot-odds >=
+0.3. As the pot-odds is a double value, using the exact value would lead to almost infinite numbers of contexts, which
+is not very useful for the AI to base decisions upon.
+
+By using these specific contexts we get a great number of different number of contexts. Our hope is to make the
+information gathered as useful as possible. 
