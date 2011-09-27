@@ -2,13 +2,14 @@
 In this section we explain our opponent model and the contexts on which it is based.
 
 \subsection{Model Details}
-We have one model per player, which every other player can access. The model contains a mapping for \textit{context} ->
-\textit{handstrength} pairs played by the player. The pairs are only recorded if the player is part of the showdown at
+We have one model per player, which every other player can access. The model contains a mapping for \textit{context}
+$ \rightarrow $ \textit{handstrength} pairs played by the player. The pairs are only recorded if the player is part of the showdown at
 the end of a single game. If a context appears multiple times, the average of all recorded handstrengths is used. All
 context-handstrength pairs are saved in a \textit{HashMap} for very fast access to the data.
 
 \subsection{Context Details}
-We use fairly specific contexts. Our contexts carry the following information to identify them:
+For our opponent modelling we use quite specific contexts. A context is implemented by the \textbf{Context} class.
+Our contexts carry the following information to identify them:
 \begin{itemize}
     \item The game-state (PreTurn, PreRiver, etc.)
     \item The action the player playen (raise, call, fold)
@@ -25,11 +26,11 @@ The common cards on the table are one of the main differences between every roun
 information present in each context. Because there are many possible combinations of suites for the same values of
 cards, we ignore the suites for the common cards. This is a basic form of equivalence class seperation.
 
-The pot-odds is discretized into four different bins: $pot-odds < 0.1$, $pot-odds < 0.2 $, $pot-odds < 0.3$
-and $ pot-odds \geq 0.3$. As the pot-odds is a double value, using the exact value would lead to almost infinite numbers of contexts, which
-is not very useful for the AI to base decisions upon. As the pot-odds provide a lot of information concerning the risk
-the player has when choosing an action, we think that it can be benificial to use it to differentiate between different
-contexts.
+As the pot-odds is a double value, using the exact value would lead to almost infinite numbers of contexts, which
+is not very useful for the AI to base decisions upon. Therefore the pot-odds is discretized into four different bins:
+pot-odds $< 0.1$, pot-odds $< 0.2 $, pot-odds $< 0.3$ and pot-odds $\geq 0.3$. Because the pot-odds provide a lot of
+information concerning the risk the player has when choosing an action, we think that it can be benificial to use it to
+differentiate between different contexts.
 
 We also included the number of raises that have been made in a round into the context as we believe that the number of
 raises is a good indication of the general game situation, many raises implies that many players believe to have many

@@ -3,51 +3,113 @@
 
 \section{Implementations}
 
-We decided to use an object oriented design with java to implement the poker player.
+We decided to use an object oriented design with Java to implement the poker simulation and players.
 
 \subsection{Phase 1}
 
 \subsubsection{Code structure}
 
 To control the flow of the poker simulation we use one main class \textbf{PokerGame}.
-It owns the players and a deck of cards and manages their interactions like giving cards, querying players for actions and evaluating the chosen actions. Additionaly it possesses information about the status of the game like the common cards, the current highest bet, credits in the pot.
-The Players are stored in a fixed list and also only the active players of a round are stored in another list that is rotated in each round. By that we implemented that a different player starts each betting round and the big- and small blind are bet alternatingly. The core procedure in this class is \textit{bettingRound(GameState, Blinds}. The parameters specify the phase of the game and whether betting of blinds is required. With this information the active players are queried to settle their bets and the betting is looped until there are no changes for a whole round. When all betting rounds are finished, the power ratings for each player are calculated and the credits are awarded to the winner.
+It owns the players and a deck of cards and manages their interactions like giving cards, querying players for actions
+and evaluating the chosen actions. Additionaly it possesses information about the status of the game like the common
+cards, the current highest bet and credits in the pot.
 
-In the first phase we implemented a naive class \textbf{Player} that is base-class for all players we implemented later. It owns the players´ two hand cards and the amount of credits. Further it knows the game object to consider certain information about the game status for betting decisions. The class provides a function \textit{getBet(GameState, minBet, force)} that returns the action chosen by the player in the game phase specified by \textit{GameState}. The parameters \textit{minBet} and \textit{force} indicate basic conditions for the bet the player has to settle on.
+The Players are stored in a fixed list, additionally only the active players of a round are stored in another list that
+is rotated in each round. We thereby implemented that a different player starts each betting round and the big- and
+small blind are bet alternatingly. The core procedure in this class is \textit{bettingRound(GameState, Blinds)}. The
+parameters specify the phase of the game and whether betting of blinds is required. With this information the active players are
+queried to settle their bets and the betting is looped until there are no changes for a whole round. When all betting
+rounds are finished, the power ratings for each player are calculated and the credits are awarded to the winner.
 
-To wrap the different actions a player can take in one, we introduced an abstract base class \textbf{PokerAction} that stores the properties of a player action. It contains a procedure that executes the action by calling procedures of \textbf{PokerGame} like \textit{call(), foldPlayer()} or \textit{raise()}.
+In the first phase we implemented a naive class \textbf{Player} that is base-class for all players we implemented later.
+It owns the players´ two hand cards and the amount of credits. Further it knows the game object to query certain
+information about the game's status for betting decisions. The class provides a function \textit{getBet(GameState, minBet,
+force)} that returns the action chosen by the player in the game phase specified by \textit{GameState}. The parameters
+\textit{minBet} and \textit{force} indicate basic conditions for the bet the player has to settle on.
+
+To wrap the different actions a player can take in one turn, we introduced an abstract base class \textbf{PokerAction} that
+stores the properties of a player action. It contains a procedure that executes the action by calling procedures of
+\textbf{PokerGame} like \textit{call(), foldPlayer()} or \textit{raise()}.
+
 The concrete implementations for this class are \textbf{CallAction, RaiseAction} and \textbf{FoldAction}.
 
-The class \textbf{Deck} implements the 52 playing cards available in a poker game. The cards are stored in an \textit{ArrayList}, that also provides the functionality to shuffle the deck. There is a variety of constructors to support the simulations for the AI Players and a single or more cards can be drawn.
+The class \textbf{Deck} implements the 52 playing cards available in a poker game. The cards are stored in an
+\textit{ArrayList} and also provides the functionality to shuffle the deck. There is a variety of constructors to
+support the simulations for the AI Players and a single or more cards can be drawn.
 
 The card itself has no functionality and only stores the suite and the value.
 
-For evaluating sets of cards according to poker rules we had to implement the power ratings newly since we dont use python. Therefore we introduced 2 classes: \textbf{CardSet} and \textbf{PowerRating}.
-A \textbf{PowerRating} stores the rating for a set of cards as described in the lecture and provides functionality to compare these ratings in order to find out which one is better.
+For evaluating sets of cards according to poker rules we had to implement the power ratings newly since we dont use
+python. Therefore we introduced 2 classes: \textbf{CardSet} and \textbf{PowerRating}.
+
+A \textbf{PowerRating} stores the rating for a set of cards as described in the lecture and provides functionality to
+compare these ratings in order to find out which one is better.
+
 \textbf{CardSet} contains a number of cards and is used to find the best rating for these cards.
-This is done by checking if the set contains a constellation of cards (e.g. StraightFlush). If yes the related power rating is returned and if not the set is checked if it contains the next lower evaluated constellation.
+This is done by checking if the set contains a constellation of cards (e.g. StraightFlush). If yes the related power
+rating is returned and if not the set is checked if it contains the next lower evaluated constellation.
 
 \subsubsection{Betting decisions}
 
-To create simple AI players that profit from some of our preceding methods, we implemented \textbf{PlayerIRaiser} and \textbf{Player}. In pre flop situations \textbf{PlayerIRaiser} chooses randomly whether to raise or to call since the only tool of assessment is power ratings and for that five cards are needed. In every situation after pre flop, the rating for the player cards combined with the available common cards is compared to a "constant" rating. If the cards are rated less or equal to a pair \textbf{PlayerIRaiser} folds. Otherwise he calls. 
-\textbf{Player} uses similar betting decisions but with different constants. He folds when the rating is worse than two pairs and in pre flop situations he raises more often.
+To create simple AI players that profit from some of our preceding methods, we implemented \textbf{PlayerIRaiser} and
+\textbf{Player}. In pre flop situations \textbf{PlayerIRaiser} chooses randomly whether to raise or to call since the
+only tool of assessment is power ratings and for that five cards are needed. In every situation after pre flop, the
+rating for the player cards combined with the available common cards is compared to a "constant" rating. If the cards
+are rated less or equal to a pair \textbf{PlayerIRaiser} folds. Otherwise he calls.
+
+\textbf{Player} uses similar betting decisions but with different constants. He folds when the rating is worse than two
+pairs and in pre flop situations he raises more often.
 
 
 \subsection{Phase 2}
 
 \subsubsection{Code structure}
-The first new feature in phase 2 is pre flop rollout simulations to find a measure for the quality of the two sole hand cards.
-To calculate the pre flop propabilities and to store them in a file we added two more classes \textbf{RolloutSimulation} and \textbf{PreFlopPropability}. As recommended we calculate the pre flop propabilities only for the 169 equivalence classes. \textbf{PreFlopPropability} stores the information for one prototype of each of the equivalence classes. Additionaly it is able to encode the information to a string and to parse it from a string. Thus it is easy to read and write the table containing the propabilities. 
-The class \textbf{RolloutSimulation} is used to extract the values from the table and has the ability to calculate them newly. When it is instantiated it checks if a file with the propability information exists. If yes it is read line by line and instances of \textbf{PreFlopPropability} are created for each and stored in a map. If no the table is created newly with the help of many rollout simulations. For each rollout a shuffled \textbf{Deck} without the players cards is created and the unknown cards are fed from the deck. To access the table the procedure \textit{double GetPropabilityFromList(Hand, numberOfPlayers)} is used. The parameter \textit{Hand} provides a list of cards that specifies the hand for which the pre flop propability is required. Inside the procedure it is mapped onto the prototype of the fitting equivalence class. The other parameter indicates the number of players and by that the required column of the table.
-The second new feature of phase two is handstrength calculations. For that we added a the class \textbf{HandStrength}. It provides a static procedure \textit{calcHandstrength(playerCards, commonCards, numberOfActivePlayers)}. It being static makes it quite independent from the context. Thus it can be used easily by the AI players that profit from the handstrength calculations aswell as the opponent modeling classes in phase three. The three parameters suffice for the calculations and can be easily extracted from \textbf{PokerGame}. After encountering performance issues we added buffering for the handstrength results using a \textit{HashMap}.
-To include the new methods in the poker simulation two new players were equipped with an instance of \textbf{RolloutSimulation}, which they use to consider the propability in their betting decisions. Only one of them uses the \textit{calcHandstrength()} Method to be able to assess the profit.
+The first new feature in phase 2 is pre flop rollout simulations to find a measure for the quality of the two sole hand
+cards.
+To calculate the pre flop propabilities and to store them in a file we added two more classes: \textbf{RolloutSimulation}
+and \textbf{PreFlopPropability}.
+
+As recommended we calculate the pre flop propabilities only for the 169 equivalence
+classes. \textbf{PreFlopPropability} stores the information for one prototype of each of the equivalence classes.
+Additionaly it is able to encode the information to a string and to parse it from a string. Thus it is easy to read and
+write the table containing the propabilities.
+
+The class \textbf{RolloutSimulation} is used to extract the values from the table and has the ability to calculate them
+newly. When it is instantiated it checks if a file with the propability information exists. If yes, it is read line by
+line and instances of \textbf{PreFlopPropability} are created and stored in a map. If not, a new table is generated 
+with the help of many rollout simulations. For each rollout a shuffled \textbf{Deck} without the players cards is
+created and the unknown cards are fed from the deck. 
+
+To access the table the procedure \textit{double GetPropabilityFromList(Hand, numberOfPlayers)} is used. The parameter \textit{Hand} provides a list of cards that
+specifies the hand for which the pre flop propability is required. Inside the procedure it is mapped onto the prototype
+of the fitting equivalence class. The other parameter indicates the number of players and by that the required column of
+the table.
+
+The second new feature of phase two is handstrength calculations. For that we added the class \textbf{HandStrength}.
+It provides a static procedure \textit{calcHandstrength(playerCards, commonCards, numberOfActivePlayers)}. It being
+static makes it independent from the context. Thus it can be used easily by the AI players that profit from the
+handstrength calculations, as well as the opponent modeling classes in phase three. The three parameters suffice for the
+calculations and can be easily extracted from a \textbf{PokerGame}. After encountering performance issues we added
+buffering for the handstrength results using a \textit{HashMap}.
+
+To include the new methods in the poker simulation two new players were equipped with an instance of
+\textbf{RolloutSimulation}, which they use to consider the propability in their betting decisions. Only one of them uses
+the \textit{calcHandstrength()} methode to be able to assess the profit.
 
 
 \subsubsection{Betting decisions}
 
-We introduced two new Players that profit from the new features: \textbf{PlayerAI} and \textbf{PlayerAIHandStrength}. While \textbf{PlayerAI} only uses rollout simulations to calculate the betting behaviour, \textbf{PlayerAIHandStrength} also employs handstrength calculations. Therefore the betting decisions of \textbf{PlayerAIHandStrength} depend strongly on the newly revealed common cards during the later rounds.
-\textbf{PlayerAI} uses a constant threshold for betting. If the pre flop rating is below 0.3 the player folds. If it is higher or equal, he bets an amount proportional to the pre flop rating or, if that is below the current bet he calls.
-\textbf{PlayerAIHandStrength} considers the ratio between the amount of credits in the pot and the amount needed to stay in the game, the pot odds, strongly. Only if the hand strength rating is larger than the pot odds the player stays in the game. If the rating is larger than the pot odds plus a constant amount, the player raises. If it is only larger he calls. The pre flop betting behaviour is carried over from \textbf{PlayerAI}.  
+We introduced two new Players that profit from the new features: \textbf{PlayerAI} and \textbf{PlayerAIHandStrength}.
+While \textbf{PlayerAI} only uses rollout simulations to calculate the betting behaviour, \textbf{PlayerAIHandStrength}
+also employs handstrength calculations. Therefore the betting decisions of \textbf{PlayerAIHandStrength} depend strongly
+on the newly revealed common cards during the later rounds.
+
+\textbf{PlayerAI} uses a constant threshold for betting. If the pre flop rating is below 0.3 the player folds. If it is
+higher or equal, he bets an amount proportional to the pre flop rating or, if that is below the current bet he calls.
+\textbf{PlayerAIHandStrength} considers the ratio between the amount of credits in the pot and the amount needed to stay
+in the game, the pot odds, strongly. Only if the hand strength rating is larger than the pot odds the player stays in
+the game. If the rating is larger than the pot odds plus a constant amount, the player raises. If it is only larger he
+calls. The pre flop betting behaviour is carried over from \textbf{PlayerAI}.
 
 \subsection{Phase 3}
 
