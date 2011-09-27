@@ -13,14 +13,24 @@ We use fairly specific contexts. Our contexts carry the following information to
     \item The game-state (PreTurn, PreRiver, etc.)
     \item The action the player playen (raise, call, fold)
     \item The player this context is valid for
+    \item The common cards' values on the table, the suite is ignored
     \item The current pot-odds, devided into four different bins
     \item The number of raises that have been played in this betting round
-    \item The common cards' values on the table, the suite is ignored
 \end{itemize}
+Having the game-state and the current action in the context seemed natural, as they cleary differentiate the different
+situations inside a game and should thus be treated by different contexts. As we expect to have different behaviour per
+player, we included the player into the context.
 
-The pot-odds is discretized into five different bins: pot-odds < 0.1, pot-odds < 0.2, pot-odds < 0.3 and pot-odds >=
-0.3. As the pot-odds is a double value, using the exact value would lead to almost infinite numbers of contexts, which
-is not very useful for the AI to base decisions upon.
+The common cards on the table are one of the main differences between every round, thus it is essential to have this
+information present in each context. Because there are many possible combinations of suites for the same values of
+cards, we ignore the suites for the common cards. This is a basic form of equivalence class seperation.
 
-By using these specific contexts we get a great number of different number of contexts. Our hope is to make the
-information gathered as useful as possible. 
+The pot-odds is discretized into four different bins: $pot-odds < 0.1$, $pot-odds < 0.2 $, $pot-odds < 0.3$
+and $ pot-odds \geq 0.3$. As the pot-odds is a double value, using the exact value would lead to almost infinite numbers of contexts, which
+is not very useful for the AI to base decisions upon. As the pot-odds provide a lot of information concerning the risk
+the player has when choosing an action, we think that it can be benificial to use it to differentiate between different
+contexts.
+
+We also included the number of raises that have been made in a round into the context as we believe that the number of
+raises is a good indication of the general game situation, many raises implies that many players believe to have many
+cards. This can influence the players decision on which action to take and should thus be included in the context.
