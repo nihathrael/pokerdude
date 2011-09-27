@@ -1,9 +1,50 @@
 % {{{=================== Introduction ======================
 
 
-\section{Introduction}
+\section{Implementations}
 
-\subsection{Motivation}
+We decided to use an object oriented design with java to implement the poker player.
+
+\subsection{Phase 1}
+
+\subsubsection{Code structure}
+
+To control the flow of the poker simulation we use one main class \textbf{PokerGame}.
+It owns the players and a deck of cards and manages their interactions like giving cards, querying players for actions and evaluating the chosen actions. Additionaly it possesses information about the status of the game like the common cards, the current highest bet, credits in the pot.
+The Players are stored in a fixed list and also only the active players of a round are stored in another list that is rotated in each round. By that we implemented that a different player starts each betting round and the big- and small blind are bet alternatingly. The core procedure in this class is \textit{bettingRound(GameState, Blinds}. The parameters specify the phase of the game and whether betting of blinds is required. With this information the active players are queried to settle their bets and the betting is looped until there are no changes for a whole round. When all betting rounds are finished, the power ratings for each player are calculated and the credits are awarded to the winner.
+
+In the first phase we implemented a naive class \textbf{Player} that is base-class for all players we implemented later. It owns the players´ two hand cards and the amount of credits. Further it knows the game to consider certain information about the game status for betting decisions. The class provides a function \textit{getBet(GameState, minBet, force)} that returns the action chosen by the player in the game phase specified by GameState. The parameters minBet and force indicate basic conditions for the bet the player has to settle on.
+
+To wrap the different actions a player can take in one, we introduced an abstract base class \textbf{PokerAction} that stores the properties of an player action. It contains a procedure that executes the action by calling procedures of \textbf{PokerGame} like \textit{call(), foldPlayer()} or \textit{raise()}.
+The concrete implementations for this class are \textbf{CallAction, RaiseAction} and \textbf{FoldAction}.
+
+The class \textbf{Deck} implements the 52 playing cards available in a poker game. The cards are stored in an \textit{ArrayList}, that also provides the functionality to shuffle the deck. There is a variety of constructors to support the simulations for the AI Players and a single or more cards can be drawn.
+
+The card itself has no functionality and only stores the suite and the value.
+
+For evaluating sets of cards according to poker rules we had to implement the power ratings newly since we dont use python. Therefore we introduced 2 classes: \textbf{CardSet} and \textbf{PowerRating}.
+A \textbf{PowerRating} stores the rating for a set of cards as described in the lecture and provides functionality to compare these ratings in order to find out which one is better.
+\textbf{CardSet} contains a number of cards and is used to find the best rating for these cards.
+This is done by checking if the set contains a constellation of cards (e.g. StraightFlush). If yes the related power rating is returned and if not the set is checked if it contains the next lower evaluated constellation.
+
+\subsubsection{Betting decisisions}
+
+
+
+
+
+
+\subsection{Phase 2}
+
+\subsubsection{Code structure}
+
+\subsubsection{Betting decisisions}
+
+\subsection{Phase 3}
+
+\subsubsection{Code structure}
+
+\subsubsection{Betting decisisions}
 
 %}}}
 
