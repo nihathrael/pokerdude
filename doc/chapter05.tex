@@ -1,4 +1,44 @@
-\section{Evaluation}
-\subsection{Project}
-\subsection{Results}
-\subsection{Methods}
+\section{Discussion of results}
+In this section we discuss the results of our simulations in the previous chapter. We give reasons for the performance
+of different strategies used by different players.
+\subsection{Phase I}
+In phase I we used two basic players.
+A very basic simple player who used some random numbers and the powerrating of his cards to decide when to raise or to
+call. The second player is very similar but uses a more aggressive strategy, which means he'll try to raise more often
+and doesn't fold as easily.
+
+Interestingly it is not possible to see a
+clear distinction between the two players looking at the results. Since especially for the first round the random
+numbers are the only changing number, this could be the reason for optaining very  random results over the course of many
+simulations.
+
+\subsection{Phase II}
+In phase II we added two new players. One uses the rollout simulation results as his only resource for reasoning about
+the bets he is about to make, the other also uses the handstrength-calculations which we implemented. We notice two
+things:
+\begin{enumerate}
+\item The rollout simulation clearly adds a lot of benefit to the players reasoning, even if using it for the late game
+phases.
+\item The handstrength-calculations seem to provide a very good indication about how good the players hand is, as the
+handstrength-player always wins.
+\end{enumerate}
+
+Because the phase II players use real game knowledge it seems reasonable to believe that it provides a real advantage
+over basic random numbers. The information is especially useful because the player can now fold more often and with a
+good reason, thereby he doesn't loose a lot of money because of staying in the game to long.
+
+
+\subsection{Phase III}
+In phase III we added two players making use of an opponent model. The results indicate that the current model, or how
+it is used, does not help in winning games of poker against less "evolved" computer players. The phase II player using
+the rollout-simulation results and the handstrength calculations is still much better.
+We see a number of possible reasons for this:
+\begin{enumerate}
+    \item We use too broad or too small contexts
+    \item The players draw the wrong conclusions from the information gathered in the model
+    \item The information gathered by handstrength-calculations is more valuable than our model's data
+\end{enumerate}
+
+Interestingly the first model player is much better than model player V2, although they use very similar reasoning
+paths. Small changes in the limits of when a player folds/raises/calls seem to have a large effect on the player's
+performance compared to the other players. A lot of fine-tuning is necessary to result in a very good poker player.

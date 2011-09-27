@@ -58,8 +58,8 @@ public class PokerDude {
 		game.addPlayer(new Player("Phase I - simple", game));
 		game.addPlayer(new PlayerAI("Phase II - only rollout", game));
 		game.addPlayer(new PlayerAIHandStrength("Phase II - rollout + HS", game));
-		game.addPlayer(new PlayerAIModelling("Phase III - Moddeling", game));
-		game.addPlayer(new PlayerAIModelling2("Phase III - Moddeling V2", game));
+		game.addPlayer(new PlayerAIModelling("Phase III - Modelling", game));
+		game.addPlayer(new PlayerAIModelling2("Phase III - Modelling V2", game));
 		
 		playRounds(rounds, game, true);
 		

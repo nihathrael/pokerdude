@@ -1,2 +1,62 @@
-\section{Own Contribution}
-\subsubsection{Implementation}
+\section{Simulation Results}
+In this chapter we present the results of our simulations. For each phase we ran five simulations of 2000 hands each.
+
+\subsection{Phase I}
+The results in phase I are very random. This was to be expected as the betting behavior of the phase I players is mainly
+random.
+
+\begin{table}[!h]
+\center
+\caption{Phase I Results - 5 simulations of 2000 hands each}
+\begin{tabular}{ c | c c c c c}
+    \textbf{Simulation} & 1 & 2 & 3 & 4 & 5 \\
+    \hline
+    \textbf{Player} \\
+    Phase I - raiser - 1 & 456 & -5212 & -17941 & 22541  & -1153\\
+    Phase I - raiser - 2 & 7700 & -1936 & 28227 & 6591   & 1720\\
+    Phase I - raiser - 3 & -20680 & -537 & 9323 & -18126 & -18186\\
+    Phase I - simple - 1 & -6776 & 11900 & 2034 & -39223 & 9172\\
+    Phase I - simple - 2 & 8223 & -633 & -6517 & 14217   & 4860\\
+    Phase I - simple - 3 & 17031 & 2360 & -9185 & 19965  & 9534\\
+\end{tabular}
+\end{table}
+
+\pagebreak
+
+\subsection{Phase II}
+In phase II we can clearly see that the players using rollout simulation results are much better than the random
+players. Adding handstrength calculations results in an even greater gain and makes the player always win against his
+simpler opponents.
+
+\begin{table}[!h]
+\center
+\caption{Phase II Results - 5 simulations of 2000 hands each}
+\begin{tabular}{ c | c c c c c}
+    \textbf{Simulation} & 1 & 2 & 3 & 4 & 5 \\
+    \hline
+    \textbf{Player} \\
+    Phase I - raiser        & -19305 & -8125 & -15256 & -17774 & -8243\\
+    Phase I - simple        & -6707 & -13404 & -11603 & -4350  & -15067\\
+    Phase II - only rollout & 8627  & 6346  & 2651    & 3535   & 10016\\
+    Phase II - rollout + HS & 21335 & 19145 & 28160   & 22528  & 17247\\
+\end{tabular}
+\end{table}
+
+\subsection{Phase III}
+In Phase III players using an opponent model were added. This did not lead to an improved performance compared to the
+Phase II players.
+
+\begin{table}[!h]
+\center
+\caption{Phase III Results - 5 simulations of 2000 hands each}
+\begin{tabular}{ c | c c c c c}
+    \textbf{Simulation} & 1 & 2 & 3 & 4 & 5 \\
+    \hline
+    \textbf{Player} \\
+    Phase I - simple            & -41870 & -62525   & -46869 & -77551 & -44061\\
+    Phase II - only rollout     & -4884 & 16297     & 2030   & 4480  & -3097\\
+    Phase II - rollout + HS     & 42133 & 28763     & 40565  & 42673 & 36456\\
+    Phase III - Modelling       & 3067  & 23382     & 24950  & 31286 & 32294\\
+    Phase III - Modelling V2    & 6468  & -977      & -15717 & 4050  & -16663\\
+\end{tabular}
+\end{table}
