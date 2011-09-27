@@ -35,7 +35,9 @@ public class PokerGame {
 	int noChanges = 0;
 	int resetNumber = 0;
 	int bigblind = 10;
-	int maxBet = 100;
+	int maxBet = 200;
+
+	private int statRounds = 0;
 
 	public PokerGame() {
 		logger.setLevel(PokerDude.DEBUGLEVEL);
@@ -141,7 +143,7 @@ public class PokerGame {
 		fillRiver();
 		showTable();
 		bettingRound(GameState.POSTRIVER, false);
-		if (gatherStatistics) {
+		if (gatherStatistics && statRounds++  <= 1000) {
 			for (Player player : playersInRound) {
 				player.model.calculateRatings();
 			}
