@@ -23,9 +23,11 @@ public class Player {
 	final PokerGame game;
 	public int lastBet=0;
 	public OpponentModelTable model = new OpponentModelTable();
+	String nameString;
 	
 	public Player(String name, PokerGame game) {
 		this.name = name;
+		nameString = "Player("+ name + ")";
 		this.game = game;
 		credits = 1000;
 	}
@@ -78,7 +80,7 @@ public class Player {
 		return getBetPreTurn(minBet);
 	}
 	
-	public String toString() {
-		return "Player("+ name + ")";
+	public String toString() {	
+		return nameString;
 	}
 }

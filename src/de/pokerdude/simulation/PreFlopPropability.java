@@ -77,6 +77,10 @@ public class PreFlopPropability {
 		
 	}
 	
+	public String getIdentString() {
+		return hand.get(0).toString()+hand.get(1).toString();
+	}
+	
 	
 	
 

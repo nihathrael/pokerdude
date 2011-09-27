@@ -82,7 +82,7 @@ public class OpponentModelTable {
 		ArrayList<Card> playerCards = action.getPlayer().getCards();
 
 		if (commonCards.size() == 0) {
-			return rs.GetPropabilityFromList(playerCards,
+			return rs.getPropabilityFromList(playerCards,
 					game.getNumberOfPlayers());
 		} else {
 			return HandStrength.calcHandstrength(playerCards, commonCards, game

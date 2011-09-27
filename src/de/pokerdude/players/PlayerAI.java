@@ -25,7 +25,7 @@ public class PlayerAI extends Player {
 	
 	@Override
 	public PokerAction getBetPreFlop(int minBet, boolean forcedBlind) {
-		double prop = RS.GetPropabilityFromList(Cards, game.getNumberOfPlayers());
+		double prop = RS.getPropabilityFromList(Cards, game.getNumberOfPlayers());
 		int bet = (int)(30 * prop);
 		if(forcedBlind) {
 			// We have to because of forcedBlind

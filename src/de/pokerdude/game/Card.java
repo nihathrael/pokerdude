@@ -4,10 +4,12 @@ public class Card implements Comparable<Card> {
 	
 	private final Suite suite;
 	private final int value;
+	String nameString;
 	
 	public Card(Suite suite, int value) {
 		this.suite = suite;
 		this.value = value;
+		nameString = "["+value+" of "+suite+"]";
 	}
 	
 	public int getValue() {
@@ -20,7 +22,7 @@ public class Card implements Comparable<Card> {
 	
 	@Override
 	public String toString() {
-		return "["+value+" of "+suite+"]";
+		return nameString;
 	}
 
 	@Override
