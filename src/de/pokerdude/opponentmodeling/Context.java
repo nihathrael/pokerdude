@@ -64,6 +64,11 @@ public class Context {
 		return identName;
 
 	}
+	
+	public GameState getState() {
+		return state;
+	}
+	
 
 	@Override
 	public boolean equals(Object o) {

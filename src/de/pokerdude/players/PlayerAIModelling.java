@@ -8,11 +8,13 @@ import de.pokerdude.actions.CallAction;
 import de.pokerdude.actions.FoldAction;
 import de.pokerdude.actions.PokerAction;
 import de.pokerdude.actions.RaiseAction;
+import de.pokerdude.game.GameState;
 import de.pokerdude.game.PokerGame;
+import de.pokerdude.opponentmodeling.Context;
 import de.pokerdude.opponentmodeling.OpponentModelTable;
 import de.pokerdude.simulation.HandStrength;
 
-public class PlayerAIModelling extends PlayerAI {
+public class PlayerAIModelling extends PlayerAIHandStrength {
 
 	static final Logger logger = Logger.getLogger(PlayerAIModelling.class);
 
@@ -20,8 +22,16 @@ public class PlayerAIModelling extends PlayerAI {
 		super(name, game);
 	}
 
+	@Override 
+	public PokerAction getBetPreRiver(int minBet) {
+		return getBetPreTurn(minBet);
+	}
+	
 	@Override
 	public PokerAction getBetPreTurn(int minBet) {
+		
+		
+		
 		ArrayList<Double> results = new ArrayList<Double>();
 		double handStrength = HandStrength.calcHandstrength(
 				this.Cards, game.getCommonCards(), game.getPlayersInRound().size());
@@ -31,7 +41,26 @@ public class PlayerAIModelling extends PlayerAI {
 				continue;
 			}
 			OpponentModelTable model = player.model;
-			double result = model.getAverageForContext(model.contextBuffer.get(model.contextBuffer.size()-1));
+			double result = 0.0;
+					
+			Context currentContext = model.contextBuffer.get(model.contextBuffer.size()-1);
+				
+			int numContexts=0;
+			
+			while(currentContext.getState() != GameState.PREFLOP) {
+				result *= numContexts;
+				result += model.getAverageForContext(currentContext);
+				numContexts++;
+				result /= numContexts;
+				currentContext = model.contextBuffer.get(model.contextBuffer.size()-numContexts-1);
+			}
+			
+			
+			//model.getAverageForContext(model.contextBuffer.get(model.contextBuffer.size()-1));
+		
+			
+			
+			
 			if(result > 0) {
 				results.add(result);
 			}
@@ -39,9 +68,12 @@ public class PlayerAIModelling extends PlayerAI {
 				wins++;
 			}
 		}
+		
+		/*
 		if(wins == 0 && results.size() > 0) {
 			return new FoldAction(game, this);
 		}
+		
 		if(wins == game.getPlayersInRound().size()-1) {
 			return new RaiseAction(game, this, minBet*2);
 		}
@@ -56,6 +88,42 @@ public class PlayerAIModelling extends PlayerAI {
 		} 
 		// We want MORE!
 		return new RaiseAction(game, this, bet); 
+		*/
+		
+		
+		
+		
+		
+		double potOdds = game.getPotOdds(this);
+		
+		int callAmount = game.getCurrentBet() - this.lastBet;
+		
+		int raise = 20;
+		
+		
+		if(wins == game.getPlayersInRound().size()-1) {
+			if(raise > callAmount)
+				return new RaiseAction(game, this, game.getCurrentBet()+raise+10);
+			else return new RaiseAction(game, this, game.getCurrentBet()+2);
+		}
+		
+		if(handStrength > (potOdds+0.1)) {
+		
+		
+			
+			if(raise > callAmount)
+				return new RaiseAction(game, this, game.getCurrentBet()+raise);
+			else return new RaiseAction(game, this, game.getCurrentBet()+2);
+		
+		
+		
+		}
+		else if(handStrength >= potOdds) {
+			return new CallAction(game, this);
+		}
+		else return new FoldAction(game, this);
+		
 	}
+	
 
 }

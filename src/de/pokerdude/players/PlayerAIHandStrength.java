@@ -21,6 +21,27 @@ public class PlayerAIHandStrength extends PlayerAI {
 	public PokerAction getBetPreTurn(int minBet) {
 		double handStrength = HandStrength.calcHandstrength(
 				this.Cards, game.getCommonCards(), game.getPlayersInRound().size());
+		
+		double potOdds = game.getPotOdds(this);
+		
+		int callAmount = game.getCurrentBet() - this.lastBet;
+		
+		int raise = 20;
+		
+		
+		if(handStrength > (potOdds+0.1)) {
+			
+			if(raise > callAmount)
+				return new RaiseAction(game, this, game.getCurrentBet()+raise);
+			else return new RaiseAction(game, this, game.getCurrentBet()+2);
+		}
+		else if(handStrength >= potOdds) {
+			return new CallAction(game, this);
+		}
+		else return new FoldAction(game, this);
+		
+		
+		/*
 		int bet = (int)(30 * handStrength);
 		if(handStrength < 0.3) {
 			// Chances are bad -> fold
@@ -31,6 +52,7 @@ public class PlayerAIHandStrength extends PlayerAI {
 		} 
 		// We want MORE!
 		return new RaiseAction(game, this, bet); 
+		*/
 	}
 
 	@Override
