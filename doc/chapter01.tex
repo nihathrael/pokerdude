@@ -5,7 +5,7 @@
 
 We decided to use an object oriented design with java to implement the poker player.
 
-\subsection{Phase 1}
+\subsection{Phase I}
 
 \subsubsection{Code structure}
 
@@ -33,7 +33,7 @@ To create simple AI players that profit from some of our preceding methods, we i
 \textbf{Player} uses similar betting decisions but with different constants. He folds when the rating is worse than two pairs and in pre flop situations he raises more often.
 
 
-\subsection{Phase 2}
+\subsection{Phase II}
 
 \subsubsection{Code structure}
 The first new feature in phase 2 is pre flop rollout simulations to find a measure for the quality of the two sole hand cards.
@@ -49,11 +49,21 @@ We introduced two new Players that profit from the new features: \textbf{PlayerA
 \textbf{PlayerAI} uses a constant threshold for betting. If the pre flop rating is below 0.3 the player folds. If it is higher or equal, he bets an amount proportional to the pre flop rating or, if that is below the current bet he calls.
 \textbf{PlayerAIHandStrength} considers the ratio between the amount of credits in the pot and the amount needed to stay in the game, the pot odds, strongly. Only if the hand strength rating is larger than the pot odds the player stays in the game. If the rating is larger than the pot odds plus a constant amount, the player raises. If it is only larger he calls. The pre flop betting behaviour is carried over from \textbf{PlayerAI}.  
 
-\subsection{Phase 3}
+\subsection{Phase III}
 
 \subsubsection{Code structure}
 
+To implement opponent modeling, we introduced one class \textbf{Context} that stores the game situation at a point of time. The equals method is used in a way that all contexts that differ in a certain range are equal. Thus the way of implementing the equals method effects on how narrow or wide a context is.
+The class \textbf{OpponentModelTable} is instanciated for each player. It records the players actions and if the player reaches showdown the hand strengths are mapped onto the context bins. For that purpose an additional class \textbf{ContextAvarage} is used that helps with calculating the average.
+As stated before each player is equipped with an OpponentModelTable a context can be created out of a game situation that can be used to query the map, to fetch the average.
+The AI players that use the opponent modeling technique can access each players \textbf{OpponentModelTable} by extracting the active players from the game and using their \textbf{OpponentModelTable} object.
+
 \subsubsection{Betting decisions}
+
+We introduced two new AI Players in phase three using opponent modeling in their betting decisions. The first one is\textbf{PlayerAIModeling}. For each player it calculates the average estimated hand strength for all actions in the current round. If the players own rating is higher than each of these avarages of estimated hand strengths, in others words the player thinks he should win, the player raises a big amount. If the player does not win against all opponents, but the hand strength is still bigger than the pot odds plus a constant summand, he raises a small amount. 
+If the hand stength is only a little higher than the pot odds the player calls and otherwise if it is lower he folds.
+\textbf{PlayerAIModeling} calculates the average estimated hand strengths in the same way as the first player, but uses the results in a different way. This player folds if he looses against all opponents if the number of opponents for which results from the opponent model are provided is at least two. Otherwise he behaves in the similar way as \textbf{PlayerAIModeling}. The constant that is added to pot odds to differentiate between raising and calling is bigger and the raised amount is linear to the current bet in the game. 
+
 
 %}}}
 
